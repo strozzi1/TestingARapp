@@ -3,17 +3,26 @@
   "version": "1.0.0",
   "description": "Test",
   "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asnow4u/TestingARapp.git"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "parcel index.html --open",
-    "build": "parcel build index.html"
+    "build": "rimraf dist && rollup -c rollup.config.js",
+    "start:build": "es-dev-server --app-index dist/index.html --open"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "three-app": "^1.0.11"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "parcel-bundler": "^1.12.4"
-  }
+    "@open-wc/building-rollup": "^0.19.1",
+    "@rollup/plugin-node-resolve": "^7.0.0",
+    "es-dev-server": "^1.36.2",
+    "rimraf": "^3.0.0",
+    "rollup": "^1.29.1"
+  },
+  "bugs": {
+    "url": "https://github.com/asnow4u/TestingARapp/issues"
+  },
+  "homepage": "https://github.com/asnow4u/TestingARapp#readme"
 }
