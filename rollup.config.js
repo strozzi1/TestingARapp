@@ -21,12 +21,15 @@ export default {
   ...config,
   plugins: [
       copy([
-        { files: 'src/style.css', dest: 'dist' },
+        { files: 'style.css', dest: 'dist' },
         { files: 'models/*.*', dest: 'dist/models'}
       ], {verbose: false, watch: false}),
       ...config.plugins,
       workbox({
         globDirectory: "dist",
+        globPatterns: [
+          '**/*.{js,css,html,glb,json}'
+        ],
         swDest: "dist/sw.js",
       }),
   ],

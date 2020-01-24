@@ -8,8 +8,9 @@
     "url": "git+https://github.com/asnow4u/TestingARapp.git"
   },
   "scripts": {
-    "build": "rimraf dist && rollup -c rollup.config.js",
-    "start:build": "es-dev-server --app-index dist/index.html --open"
+    "start": "es-dev-server --node-resolve --app-index index.html --open",
+    "start:build": "es-dev-server dist/ --open",
+    "build": "rimraf dist && rollup -c rollup.config.js"
   },
   "author": "",
   "license": "ISC",
