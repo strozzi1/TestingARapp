@@ -5,16 +5,3 @@ body {
   color: white;
   text-align: center;
 }
-
-a {
-  color: white;
-}
-a:hover{
-  color: red;
-}
-
-#container {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
