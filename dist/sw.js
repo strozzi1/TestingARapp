@@ -27,11 +27,11 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "index.html",
-    "revision": "c239b171393248934bb713bdbbae6b1c"
+    "revision": "d23cede42b8fccefcdfee8f40dc8bff7"
   },
   {
-    "url": "main-e46679b2.js",
-    "revision": "4d446b709ef920df4ea5fb8b5147aaa4"
+    "url": "main-822685b4.js",
+    "revision": "aa2b19553640fd040b0bcb67fea91c7f"
   },
   {
     "url": "polyfills/custom-elements-es5-adapter.84b300ee818dce8b351c7cc7c100bcf7.js",
@@ -51,5 +51,3 @@ self.__precacheManifest = [
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
-
-workbox.routing.registerNavigationRoute(workbox.precaching.getCacheKeyForURL("/index.html"));
