@@ -1,7 +1,12 @@
-import {workbox} from 'workbox-window';
-import {WebGLRenderer, Scene, PerspectiveCamera, PointLight} from 'three';
+import {Workbox} from 'workbox-window';
+import {WebGLRenderer, Scene, PerspectiveCamera, PointLight, BoxGeometry, MeshBasicMaterial, Mesh} from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+
+if ("serviceWorker" in navigator) {
+  const wb = new Workbox('service-worker.js');
+  wb.register();
+}
 
 var renderer = new WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -12,7 +17,7 @@ var camera= new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1
 var cameraControls = new OrbitControls(camera, renderer.domElement);
 cameraControls.update();
 
-camera.position.z = 1500;
+camera.position.z = 100;
 
 var light = new PointLight( 0xffffff, 1, 0, 0);
 scene.add(light);
@@ -44,30 +49,11 @@ var render = () => {
   requestAnimationFrame( render );
   cameraControls.update();
   renderer.render( scene, camera);
-
 };
 
-//TODO work on service worker
-// firstUpdated() {
-//    setTimeout(() => this._revealUi(), 500);
-//
-//    this._fetchAssets();
-//
-//    // Check that service workers are supported
-//    if ('serviceWorker' in navigator) {
-//      const wb = new Workbox('service-worker.js');
-//      // Add an event listener to detect when the registered
-//      // service worker has installed but is waiting to activate.
-//      wb.addEventListener('waiting', (event) => {
-//        this._swSnackbar.open();
-//        this._swSnackbar.addEventListener('MDCSnackbar:closed', ev => {
-//          if (ev.detail.reason === "reload") {
-//            wb.addEventListener('controlling', (event) => {
-//              window.location.reload();
-//            });
-//          }
-//        });
-//      });
-//      wb.register();
-//    }
-//  }
+var geometry = new BoxGeometry( 10, 10, 10 );
+var material = new MeshBasicMaterial( {color: 0x00ff00} );
+var cube = new Mesh( geometry, material );
+scene.add( cube );
+
+console.log("HERE");
