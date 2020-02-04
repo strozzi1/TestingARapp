@@ -1,7 +1,8 @@
 import {Workbox} from 'workbox-window';
-import {WebGLRenderer, Scene, PerspectiveCamera, PointLight, BoxGeometry, MeshBasicMaterial, Mesh} from 'three';
+import {WebGLRenderer, Scene, PerspectiveCamera, PointLight, BoxGeometry, MeshBasicMaterial, Mesh, Vector3} from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+
 
 if ("serviceWorker" in navigator) {
   const wb = new Workbox('service-worker.js');
@@ -17,10 +18,18 @@ var camera= new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1
 var cameraControls = new OrbitControls(camera, renderer.domElement);
 cameraControls.update();
 
-camera.position.z = 100;
+camera.position.z = 1500;
+cameraControls.target = new Vector3(0, 0, 0);
+cameraControls.update();
 
-var light = new PointLight( 0xffffff, 1, 0, 0);
+var light = new PointLight( 0xfffee8, 10, 0, 0 );
+light.position.z = 1500;
 scene.add(light);
+
+// var geometry = new BoxGeometry( 100, 100, 100 );
+// var material = new MeshBasicMaterial( {color: 0x00ff00} );
+// var cube = new Mesh( geometry, material );
+// scene.add( cube );
 
 var modelObj;
 var loader = new GLTFLoader();
@@ -51,9 +60,4 @@ var render = () => {
   renderer.render( scene, camera);
 };
 
-var geometry = new BoxGeometry( 10, 10, 10 );
-var material = new MeshBasicMaterial( {color: 0x00ff00} );
-var cube = new Mesh( geometry, material );
-scene.add( cube );
-
-console.log("HERE");
+render();

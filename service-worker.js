@@ -1,5 +1,11 @@
 importScripts('/node_modules/workbox-sw/build/workbox-sw.js');
 
+if (workbox){
+  console.log('Workbox loaded');
+} else {
+  console.log('Workbox not loaded');
+}
+
 workbox.routing.registerRoute(
   /\.css$/,
   new workbox.strategies.StaleWhileRevalidate({
