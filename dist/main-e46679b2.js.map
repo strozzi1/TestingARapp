@@ -1,1 +1,0 @@
-{"version":3,"file":"main-e46679b2.js","sources":["../src/main.js"],"sourcesContent":["//import * from 'three';\r\n//import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';\r\n\r\nconsole.log(\"WORKS\");\r\n"],"names":["console","log"],"mappings":"AAGAA,QAAQC,IAAI"}
