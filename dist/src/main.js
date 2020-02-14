@@ -69,6 +69,8 @@ var render = () => {
   // WebGL scene globals.
   let gl = null;
 
+  //WORKING
+  //Check if AR is supported on the device
   function checkSupportedState() {
     navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
       if (supported) {
@@ -83,32 +85,37 @@ var render = () => {
     });
   }
 
-  checkSupportedState();
-      // function initXR() {
-      //   if (!window.isSecureContext) {
-      //     let message = "WebXR unavailable due to insecure context";
-      //     document.getElementById("warning-zone").innerText = message;
-      //   }
-      //
-      //   if (navigator.xr) {
-      //     xrButton.addEventListener('click', onButtonClicked);
-      //     navigator.xr.addEventListener('devicechange', checkSupportedState);
-      //     checkSupportedState();
-      //   }
-      // }
-      //
-      // function onButtonClicked() {
-      //   if (!xrSession) {
-      //       // Ask for an optional DOM Overlay, see https://immersive-web.github.io/dom-overlays/
-      //       // Use BODY as the root element.
-      //       navigator.xr.requestSession('immersive-ar', {
-      //           optionalFeatures: ['dom-overlay'],
-      //           domOverlay: {root: document.body}
-      //       }).then(onSessionStarted, onRequestSessionError);
-      //   } else {
-      //     xrSession.end();
-      //   }
-      // }
+  //Inital function that starts AR off. Establishes AR to button with eventlistener
+  function initXR() {
+    //Nessisary?
+    if (!window.isSecureContext) {
+      let message = "WebXR unavailable due to insecure context";
+      // document.getElementById("warning-zone").innerText = message;
+      console.log(message);
+    }
+
+    if (navigator.xr) {
+      xrButton.addEventListener('click', onButtonClicked);
+      navigator.xr.addEventListener('devicechange', checkSupportedState);
+      checkSupportedState();
+    }
+  }
+
+  function onButtonClicked() {
+    if (!xrSession) {
+        // Ask for an optional DOM Overlay, see https://immersive-web.github.io/dom-overlays/
+        // Use BODY as the root element.
+
+        console.log("AR Start");
+        // navigator.xr.requestSession('immersive-ar', {
+        //     optionalFeatures: ['dom-overlay'],
+        //     domOverlay: {root: document.body}
+        // }).then(onSessionStarted, onRequestSessionError);
+    } else {
+      //xrSession.end();
+      console.log("AR ENDED");
+    }
+  }
       //
       // function onSessionStarted(session) {
       //   xrSession = session;
@@ -165,8 +172,8 @@ var render = () => {
       //     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       //   }
       // }
-      //
-      // initXR();
+
+      initXR();
 
 
 
