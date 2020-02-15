@@ -11,18 +11,33 @@ if ("serviceWorker" in navigator) {
 
 //Scene amd Camera
 var scene = new Scene();
-var camera= new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 1, 100000);
+scene.background = null;
+//var camera= new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 1, 100000);
 var renderer = new WebGLRenderer({antialias: true});
+
+//camera
+function createCamera() {
+    // this._settings = MainApplication.CAMERA_SETTINGS;
+    // this._camera = new PerspectiveCamera(
+    //     this._settings.viewAngle,
+    //     this._aspect,
+    //     this._settings.near,
+    //     this._settings.far
+    // );
+    // // Disable autoupdating because these values will be coming from WebXR.
+    // this._camera.matrixAutoUpdate = false;
+}
+
 
 //Renderer
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+//document.body.appendChild(renderer.domElement);
 
 var geometry = new BoxGeometry( 100, 100, 100 );
-// var material = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
-var material = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
+var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
+var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
 
-var cube = new Mesh( geometry, material );
+var cube = new Mesh( geometry, green );
 
 scene.add( cube );
 
@@ -33,6 +48,23 @@ var render = () => {
 
   renderer.render( scene, camera);
 };
+
+render();
+
+//RENDER
+// renderView(xrView, viewport) {
+//     this._renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+//     const viewMatrix = xrView.transform.inverse.matrix;
+//     // Update the camera matrices.
+//     this._camera.projectionMatrix.fromArray(xrView.projectionMatrix);
+//     this._camera.matrix.fromArray(viewMatrix).getInverse(this._camera.matrix);
+//     this._camera.updateMatrixWorld(true);
+//
+//     this._renderer.render(this._scene, this._camera);
+//   }
+
+
+
 
 // var light = new PointLight( 0xfffee8, 10, 0, 0 );
 // light.position.z = 1500;
@@ -71,7 +103,6 @@ var render = () => {
   // WebGL scene globals.
   let gl = null;
 
-  //WORKING
   //Check if AR is supported on the device
   function checkSupportedState() {
     navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
@@ -131,6 +162,10 @@ var render = () => {
     //
     // session.addEventListener('end', onSessionEnded);
     let canvas = document.createElement('canvas');
+
+    //TESTING
+    canvas.appendChild(renderer.domElement);
+
     gl = canvas.getContext('webgl', {
       xrCompatible: true
     });
@@ -160,26 +195,25 @@ var render = () => {
       function onXRFrame(t, frame) {
         let session = frame.session;
         session.requestAnimationFrame(onXRFrame);
-        let pose = frame.getViewerPose(xrRefSpace);
 
-        if (pose) {
-          gl.bindFramebuffer(gl.FRAMEBUFFER, session.renderState.baseLayer.framebuffer);
 
-          // Update the clear color so that we can observe the color in the
-          // headset changing over time. Use a scissor rectangle to keep the AR
-          // scene visible.
-          const width = session.renderState.baseLayer.framebufferWidth;
-          const height = session.renderState.baseLayer.framebufferHeight;
-          gl.enable(gl.SCISSOR_TEST);
-          gl.scissor(width / 4, height / 4, width / 2, height / 2);
-          let time = Date.now();
-          gl.clearColor(Math.cos(time / 2000), Math.cos(time / 4000), Math.cos(time / 6000), 0.5);
-          gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        }
+
+        // let pose = frame.getViewerPose(xrRefSpace);
+        //
+        // if (pose) {
+        //   gl.bindFramebuffer(gl.FRAMEBUFFER, session.renderState.baseLayer.framebuffer);
+        //
+        //   // Update the clear color so that we can observe the color in the
+        //   // headset changing over time. Use a scissor rectangle to keep the AR
+        //   // scene visible.
+        //   const width = session.renderState.baseLayer.framebufferWidth;
+        //   const height = session.renderState.baseLayer.framebufferHeight;
+        //   gl.enable(gl.SCISSOR_TEST);
+        //   gl.scissor(width / 4, height / 4, width / 2, height / 2);
+        //   let time = Date.now();
+        //   gl.clearColor(Math.cos(time / 2000), Math.cos(time / 4000), Math.cos(time / 6000), 0.5);
+        //   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        // }
       }
 
       initXR();
-
-
-
-render();
