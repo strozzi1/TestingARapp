@@ -107,10 +107,12 @@ var render = () => {
         // Use BODY as the root element.
 
         console.log("AR Start");
-        navigator.xr.requestSession('immersive-ar', {
-            optionalFeatures: ['dom-overlay'],
-            domOverlay: {root: document.body}
-        }).then(onSessionStarted, onRequestSessionError);
+        navigator.xr.requestSession('immersive-ar'
+        // , {
+        //     optionalFeatures: ['dom-overlay'],
+        //     domOverlay: {root: document.body}
+        // }
+      ).then(onSessionStarted, onRequestSessionError);
     } else {
       //xrSession.end();
       console.log("AR ENDED");
