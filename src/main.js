@@ -103,9 +103,83 @@ var render = () => {
   let xrButton = document.getElementById('xr-button');
   let xrSession = null;
   let xrRefSpace = null;
+  var arActivated = false;
 
   // WebGL scene globals.
   let gl = null;
+
+  //Inital function that starts AR off. Establishes AR to button with eventlistener
+  function initXR() {
+    if (navigator.xr) {
+      xrButton.addEventListener('click', toggleAR);
+      //navigator.xr.addEventListener('devicechange', checkSupportedState);
+      //checkSupportedState();
+    }
+  }
+
+  async function toggleAR(){
+    if (arActivated){
+      console.log("AR is already activated");
+      return; //Would close down the XR
+    }
+    return activateAR();
+  }
+
+  async function activateAR(){
+    try{
+      xrSession = await navigator.xr.requestSession('immersive-ar');
+      xrRefSpace = await xrSession.requestReferenceSpace('local');
+      //handle select
+
+      let gl = renderer.getContext();
+      await gl.makeXRCompatible();
+      let layer = new XRWebGLLayer(xrSession, gl);
+      xrSession.updateRenderState({ baseLayer: layer });
+
+      //end eventlistener
+
+      xrSession.requestAnimationFrame((...args) => renderXR(...args));
+      arActivated = true;
+
+
+    } catch (error){
+      console.log("Catch: "+ error);
+    }
+  }
+
+  function renderXR(timestamp, xrFrame){
+    if (!xrFrame || !this._xrSession || !this._arActivated)
+      return;
+
+    let pose = xrFrame.getViewerPose(xrRefSpace);
+    if (!pose){
+      xrSession.requestAnimationFrame((...args) => renderXR(...args));
+      return;
+    }
+
+    let xrLayer = xrSession.renderState.baseLayer;
+    renderer.setFramebuffer(xrLayer.framebuffer);
+
+    // for (let xrView of pose.views){
+    //   let viewport = xrLayer.getViewport(xrView);
+    //   renderView(xrView, viewport);
+    // }
+
+    xrSession.requestAnimationFrame((...args) => renderXR(...args));
+  }
+
+  // function renderView(xrView, viewport){
+  //   renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+  //   const viewMatrix = xrView.transform.inverse.matrix;
+  //
+  //   //camera
+  //   this._camera.projectionMatrix.fromArray(xrView.projectionMatrix);
+  //   this._camera.matrix.fromArray(viewMatrix).getInverse(this._camera.matrix);
+  //   this._camera.updateMatrixWorld(true);
+  //
+  //   renderer.render(scene, camera)
+  // }
+
 
   //Check if AR is supported on the device
   function checkSupportedState() {
@@ -122,22 +196,7 @@ var render = () => {
     });
   }
 
-  //Inital function that starts AR off. Establishes AR to button with eventlistener
-  function initXR() {
 
-    //Nessisary?
-    // if (!window.isSecureContext) {
-    //   let message = "WebXR unavailable due to insecure context";
-    //   // document.getElementById("warning-zone").innerText = message;
-    //   console.log(message);
-    // }
-
-    if (navigator.xr) {
-      xrButton.addEventListener('click', onButtonClicked);
-      navigator.xr.addEventListener('devicechange', checkSupportedState);
-      checkSupportedState();
-    }
-  }
 
   function onButtonClicked() {
     if (!xrSession) {
