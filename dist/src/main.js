@@ -12,7 +12,8 @@ if ("serviceWorker" in navigator) {
 //Scene amd Camera
 var scene = new Scene();
 scene.background = null;
-//var camera= new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 1, 100000);
+
+var camera= new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 1, 100000);
 var renderer = new WebGLRenderer({antialias: true});
 
 //camera
@@ -28,10 +29,13 @@ function createCamera() {
     // this._camera.matrixAutoUpdate = false;
 }
 
+scene.matrixAutoUpdate = false; //Alexis has it on the camera
+renderer.autoClear = false;
+
 
 //Renderer
 renderer.setSize(window.innerWidth, window.innerHeight);
-//document.body.appendChild(renderer.domElement);
+document.body.appendChild(renderer.domElement);
 
 var geometry = new BoxGeometry( 100, 100, 100 );
 var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
@@ -41,15 +45,15 @@ var cube = new Mesh( geometry, green );
 
 scene.add( cube );
 
-// camera.position.z = 1000;
-//
-// var render = () => {
-//   requestAnimationFrame( render );
-//
-//   renderer.render( scene, camera);
-// };
-//
-// render();
+camera.position.z = 1000;
+
+var render = () => {
+  requestAnimationFrame( render );
+
+  renderer.render( scene, camera);
+};
+
+
 
 //RENDER
 // renderView(xrView, viewport) {
@@ -120,13 +124,14 @@ scene.add( cube );
 
   //Inital function that starts AR off. Establishes AR to button with eventlistener
   function initXR() {
-    //Nessisary?
-    if (!window.isSecureContext) {
-      let message = "WebXR unavailable due to insecure context";
-      // document.getElementById("warning-zone").innerText = message;
-      console.log(message);
-    }
 
+    //Nessisary?
+    // if (!window.isSecureContext) {
+    //   let message = "WebXR unavailable due to insecure context";
+    //   // document.getElementById("warning-zone").innerText = message;
+    //   console.log(message);
+    // }
+    //
     if (navigator.xr) {
       xrButton.addEventListener('click', onButtonClicked);
       navigator.xr.addEventListener('devicechange', checkSupportedState);
@@ -140,6 +145,7 @@ scene.add( cube );
         // Use BODY as the root element.
 
         console.log("AR Start");
+
         navigator.xr.requestSession('immersive-ar'
         // , {
         //     optionalFeatures: ['dom-overlay'],
@@ -152,28 +158,41 @@ scene.add( cube );
     }
   }
 
-  function onSessionStarted(session) {
-    console.log("AR session started")
+  async function onSessionStarted(session) {
+    console.log("AR session started");
     xrSession = session;
+
+    session.requestReferenceSpace('local');
+
+    let gl = renderer.getContext();
+    await gl.makeXRCompatible();
+    let layer = new XRWebGLLayer(session, gl);
+    session.updateRenderState({ baseLayer: layer });
+
+    let xrLayer = session.renderState.baseLayer;
+    renderer.setFramebuffer(xrLayer.framebuffer);
+
+    //Pose goes here
+
+    session.requestAnimationFrame(onXRFrame);
+
+
     // xrButton.innerHTML = 'Exit AR';
 
     // Show which type of DOM Overlay got enabled (if any)
     // document.getElementById('session-info').innerHTML = 'DOM Overlay type: ' + session.domOverlayState.type;
     //
     // session.addEventListener('end', onSessionEnded);
-    let canvas = document.createElement('canvas');
-
-    //TESTING
-    canvas.appendChild(renderer.domElement);
-
-    gl = canvas.getContext('webgl', {
-      xrCompatible: true
-    });
-    session.updateRenderState({ baseLayer: new XRWebGLLayer(session, gl) });
-    session.requestReferenceSpace('local').then((refSpace) => {
-      xrRefSpace = refSpace;
-      session.requestAnimationFrame(onXRFrame);
-    });
+    // let canvas = document.createElement('canvas');
+    //
+    // gl = canvas.getContext('webgl', {
+    //   xrCompatible: true
+    // });
+    // session.updateRenderState({ baseLayer: new XRWebGLLayer(session, gl) });
+    // session.requestReferenceSpace('local').then((refSpace) => {
+    //   xrRefSpace = refSpace;
+    //   session.requestAnimationFrame(onXRFrame);
+    // });
   }
 
   function onRequestSessionError(ex) {
@@ -192,28 +211,16 @@ scene.add( cube );
       //   gl = null;
       // }
 
-      function onXRFrame(t, frame) {
-        let session = frame.session;
-        session.requestAnimationFrame(onXRFrame);
-
-
-
+  function onXRFrame(t, frame) {
+    //let session = frame.session;
+    let xrLayer = session.renderState.baseLayer;
+    renderer.setFramebuffer(xrLayer.framebuffer);
+    session.requestAnimationFrame(onXRFrame);
         // let pose = frame.getViewerPose(xrRefSpace);
         //
-        // if (pose) {
-        //   gl.bindFramebuffer(gl.FRAMEBUFFER, session.renderState.baseLayer.framebuffer);
-        //
-        //   // Update the clear color so that we can observe the color in the
-        //   // headset changing over time. Use a scissor rectangle to keep the AR
-        //   // scene visible.
-        //   const width = session.renderState.baseLayer.framebufferWidth;
-        //   const height = session.renderState.baseLayer.framebufferHeight;
-        //   gl.enable(gl.SCISSOR_TEST);
-        //   gl.scissor(width / 4, height / 4, width / 2, height / 2);
-        //   let time = Date.now();
-        //   gl.clearColor(Math.cos(time / 2000), Math.cos(time / 4000), Math.cos(time / 6000), 0.5);
-        //   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        // }
-      }
+
+  }
 
       initXR();
+
+// render();
