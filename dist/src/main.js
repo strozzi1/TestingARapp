@@ -148,8 +148,10 @@ var render = () => {
   }
 
   function renderXR(timestamp, xrFrame){
-    if (!xrFrame || !this._xrSession || !this._arActivated)
+    if (!xrFrame || !xrSession || !arActivated){
+      console.log("Failed");
       return;
+    }
 
     let pose = xrFrame.getViewerPose(xrRefSpace);
     if (!pose){
