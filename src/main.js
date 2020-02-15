@@ -131,7 +131,7 @@ var render = () => {
     //   // document.getElementById("warning-zone").innerText = message;
     //   console.log(message);
     // }
-    //
+
     if (navigator.xr) {
       xrButton.addEventListener('click', onButtonClicked);
       navigator.xr.addEventListener('devicechange', checkSupportedState);
@@ -169,8 +169,8 @@ var render = () => {
     let layer = new XRWebGLLayer(session, gl);
     session.updateRenderState({ baseLayer: layer });
 
-    let xrLayer = session.renderState.baseLayer;
-    renderer.setFramebuffer(xrLayer.framebuffer);
+    let xrLayer = session.baseLayer;
+    renderer.context.bindFramebuffer(renderer.context.FRAMEBUFFER, xrLayer.framebuffer);
 
     //Pose goes here
 
@@ -216,9 +216,11 @@ var render = () => {
     let xrLayer = session.renderState.baseLayer;
     renderer.setFramebuffer(xrLayer.framebuffer);
     session.requestAnimationFrame(onXRFrame);
-        // let pose = frame.getViewerPose(xrRefSpace);
-        //
+    let pose = frame.getViewerPose(xrRefSpace);
 
+    if (pose){
+      console.log("POSE WORKS");
+    }
   }
 
       initXR();
