@@ -107,40 +107,41 @@ var render = () => {
         // Use BODY as the root element.
 
         console.log("AR Start");
-        // navigator.xr.requestSession('immersive-ar', {
-        //     optionalFeatures: ['dom-overlay'],
-        //     domOverlay: {root: document.body}
-        // }).then(onSessionStarted, onRequestSessionError);
+        navigator.xr.requestSession('immersive-ar', {
+            optionalFeatures: ['dom-overlay'],
+            domOverlay: {root: document.body}
+        }).then(onSessionStarted, onRequestSessionError);
     } else {
       //xrSession.end();
       console.log("AR ENDED");
     }
   }
-      //
-      // function onSessionStarted(session) {
-      //   xrSession = session;
-      //   xrButton.innerHTML = 'Exit AR';
-      //
-      //   // Show which type of DOM Overlay got enabled (if any)
-      //   document.getElementById('session-info').innerHTML = 'DOM Overlay type: ' + session.domOverlayState.type;
-      //
-      //   session.addEventListener('end', onSessionEnded);
-      //   let canvas = document.createElement('canvas');
-      //   gl = canvas.getContext('webgl', {
-      //     xrCompatible: true
-      //   });
-      //   session.updateRenderState({ baseLayer: new XRWebGLLayer(session, gl) });
-      //   session.requestReferenceSpace('local').then((refSpace) => {
-      //     xrRefSpace = refSpace;
-      //     session.requestAnimationFrame(onXRFrame);
-      //   });
-      // }
-      //
-      // function onRequestSessionError(ex) {
-      //   alert("Failed to start immersive AR session.");
-      //   console.error(ex.message);
-      // }
-      //
+
+  function onSessionStarted(session) {
+    console.log("AR session started")
+    // xrSession = session;
+    // xrButton.innerHTML = 'Exit AR';
+    //
+    // // Show which type of DOM Overlay got enabled (if any)
+    // document.getElementById('session-info').innerHTML = 'DOM Overlay type: ' + session.domOverlayState.type;
+    //
+    // session.addEventListener('end', onSessionEnded);
+    // let canvas = document.createElement('canvas');
+    // gl = canvas.getContext('webgl', {
+    //   xrCompatible: true
+    // });
+    // session.updateRenderState({ baseLayer: new XRWebGLLayer(session, gl) });
+    // session.requestReferenceSpace('local').then((refSpace) => {
+    //   xrRefSpace = refSpace;
+    //   session.requestAnimationFrame(onXRFrame);
+    // });
+  }
+
+  function onRequestSessionError(ex) {
+    alert("Failed to start immersive AR session.");
+    console.error(ex.message);
+  }
+
       // function onEndSession(session) {
       //   session.end();
       // }
@@ -151,7 +152,7 @@ var render = () => {
       //   document.getElementById('session-info').innerHTML = '';
       //   gl = null;
       // }
-      //
+
       // function onXRFrame(t, frame) {
       //   let session = frame.session;
       //   session.requestAnimationFrame(onXRFrame);
