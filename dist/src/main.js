@@ -41,15 +41,15 @@ var cube = new Mesh( geometry, green );
 
 scene.add( cube );
 
-camera.position.z = 1000;
-
-var render = () => {
-  requestAnimationFrame( render );
-
-  renderer.render( scene, camera);
-};
-
-render();
+// camera.position.z = 1000;
+//
+// var render = () => {
+//   requestAnimationFrame( render );
+//
+//   renderer.render( scene, camera);
+// };
+//
+// render();
 
 //RENDER
 // renderView(xrView, viewport) {
