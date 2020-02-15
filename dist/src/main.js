@@ -19,7 +19,9 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 var geometry = new BoxGeometry( 100, 100, 100 );
-var material = new MeshBasicMaterial( {color: 0x00ff00} );
+// var material = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
+var material = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
+
 var cube = new Mesh( geometry, material );
 
 scene.add( cube );
@@ -121,22 +123,22 @@ var render = () => {
 
   function onSessionStarted(session) {
     console.log("AR session started")
-    // xrSession = session;
+    xrSession = session;
     // xrButton.innerHTML = 'Exit AR';
-    //
-    // // Show which type of DOM Overlay got enabled (if any)
+
+    // Show which type of DOM Overlay got enabled (if any)
     // document.getElementById('session-info').innerHTML = 'DOM Overlay type: ' + session.domOverlayState.type;
     //
     // session.addEventListener('end', onSessionEnded);
-    // let canvas = document.createElement('canvas');
-    // gl = canvas.getContext('webgl', {
-    //   xrCompatible: true
-    // });
-    // session.updateRenderState({ baseLayer: new XRWebGLLayer(session, gl) });
-    // session.requestReferenceSpace('local').then((refSpace) => {
-    //   xrRefSpace = refSpace;
-    //   session.requestAnimationFrame(onXRFrame);
-    // });
+    let canvas = document.createElement('canvas');
+    gl = canvas.getContext('webgl', {
+      xrCompatible: true
+    });
+    session.updateRenderState({ baseLayer: new XRWebGLLayer(session, gl) });
+    session.requestReferenceSpace('local').then((refSpace) => {
+      xrRefSpace = refSpace;
+      session.requestAnimationFrame(onXRFrame);
+    });
   }
 
   function onRequestSessionError(ex) {
@@ -155,26 +157,26 @@ var render = () => {
       //   gl = null;
       // }
 
-      // function onXRFrame(t, frame) {
-      //   let session = frame.session;
-      //   session.requestAnimationFrame(onXRFrame);
-      //   let pose = frame.getViewerPose(xrRefSpace);
-      //
-      //   if (pose) {
-      //     gl.bindFramebuffer(gl.FRAMEBUFFER, session.renderState.baseLayer.framebuffer);
-      //
-      //     // Update the clear color so that we can observe the color in the
-      //     // headset changing over time. Use a scissor rectangle to keep the AR
-      //     // scene visible.
-      //     const width = session.renderState.baseLayer.framebufferWidth;
-      //     const height = session.renderState.baseLayer.framebufferHeight;
-      //     gl.enable(gl.SCISSOR_TEST);
-      //     gl.scissor(width / 4, height / 4, width / 2, height / 2);
-      //     let time = Date.now();
-      //     gl.clearColor(Math.cos(time / 2000), Math.cos(time / 4000), Math.cos(time / 6000), 0.5);
-      //     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-      //   }
-      // }
+      function onXRFrame(t, frame) {
+        let session = frame.session;
+        session.requestAnimationFrame(onXRFrame);
+        let pose = frame.getViewerPose(xrRefSpace);
+
+        if (pose) {
+          gl.bindFramebuffer(gl.FRAMEBUFFER, session.renderState.baseLayer.framebuffer);
+
+          // Update the clear color so that we can observe the color in the
+          // headset changing over time. Use a scissor rectangle to keep the AR
+          // scene visible.
+          const width = session.renderState.baseLayer.framebufferWidth;
+          const height = session.renderState.baseLayer.framebufferHeight;
+          gl.enable(gl.SCISSOR_TEST);
+          gl.scissor(width / 4, height / 4, width / 2, height / 2);
+          let time = Date.now();
+          gl.clearColor(Math.cos(time / 2000), Math.cos(time / 4000), Math.cos(time / 6000), 0.5);
+          gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        }
+      }
 
       initXR();
 
