@@ -148,8 +148,19 @@ var render = () => {
   }
 
   function renderXR(timestamp, xrFrame){
+    console.log("Render Loop");
     if (!xrFrame || !xrSession || !arActivated){
-      console.log("Failed");
+      if (!xrFrame){
+        console.log("XRFRAME FAIL");
+      }
+
+      if (!xrSession){
+        console.log("XRSESSION FAIL");
+      }
+
+      if (!arActivated){
+        console.log("oups XD");
+      }
       return;
     }
 
