@@ -4,7 +4,7 @@ import {AmbientLight, AnimationMixer, Box3, CircleGeometry, Clock, CubeTextureLo
         Matrix4, Mesh, MeshBasicMaterial, Object3D, PerspectiveCamera,
         PCFSoftShadowMap, PlaneBufferGeometry, PlaneGeometry,
         PMREMGenerator, Raycaster, RingGeometry, Scene, ShadowMaterial,
-        sRGBEncoding, TextureLoader, Vector3, WebGLRenderer} from 'three';
+        sRGBEncoding, TextureLoader, Vector3, WebGLRenderer, BoxGeometry} from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 
