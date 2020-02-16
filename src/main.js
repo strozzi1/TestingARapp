@@ -1,5 +1,10 @@
 import {Workbox} from 'workbox-window';
-import {WebGLRenderer, Scene, PerspectiveCamera, PointLight, BoxGeometry, MeshBasicMaterial, Mesh, Vector3, Raycaster} from 'three';
+import {AmbientLight, AnimationMixer, Box3, CircleGeometry, Clock, CubeTextureLoader,
+        DirectionalLight, DoubleSide, Euler, GammaEncoding, Math as ThreeMath,
+        Matrix4, Mesh, MeshBasicMaterial, Object3D, PerspectiveCamera,
+        PCFSoftShadowMap, PlaneBufferGeometry, PlaneGeometry,
+        PMREMGenerator, Raycaster, RingGeometry, Scene, ShadowMaterial,
+        sRGBEncoding, TextureLoader, Vector3, WebGLRenderer} from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -142,6 +147,9 @@ scene.add( cube );
     //   console.log("pose");
     // }
 
+    if (!reticle)
+      createReticle();
+
     const x=0;
     const y=0;
     let raycaster = new Raycaster();
@@ -158,17 +166,19 @@ scene.add( cube );
       if (results.length) {
         console.log("raycast good");
         let hitResult = results[0];
-        cube.visible = true; //needed?
+        reticle.visible = true; //needed?
         let hitMatrix = new Matrix4();
         hitMatrix.fromArray(hitResult.hitMatrix);
-        cube.position.setFromMatrixPosition(hitMatrix);
+        reticle.position.setFromMatrixPosition(hitMatrix);
+        lookAtOnY(reticle, camera, null);
 
       } else {
-        //console.log(results);
+        console.log(results);
+        reticle.visible = false;
       }
     });
 
-    //Did get it to show up
+    //Did get it to show up but errors
     // if (xrHitTestSource && pose){
     //   console.log("new Way");
     //   let hitTestResults = xrFrame.getHitTestResults(xrHitTestSource);
@@ -205,6 +215,32 @@ scene.add( cube );
     renderer.render(scene, camera)
   }
 
+  function createReticle(){
+    if (reticle){
+      return;
+    }
+
+    reticle = new Object3D();
+    let ringGeometry = new RingGeometry(0.1, 0.11, 24, 1);
+    let material = new MeshBasicMaterial({ color: 0xffffff });
+    ringGeometry.applyMatrix(new Matrix4().makeRotationX(ThreeMath.degToRad(-90)));
+    let circle = new Mesh(ringGeometry, material);
+    circle.position.y = 0.03;
+
+    reticle.add(circle);
+    reticle.name = 'reticle';
+    scene.add(reticle)
+  }
+
+  function lookAtOnY(looker, target, origin) {
+    const targetPos = new Vector3().setFromMatrixPosition(target.matrixWorld);
+
+    const angle = Math.atan2(targetPos.x - looker.position.x, targetPos.z - looker.position.z);
+    looker.rotation.set(0, angle, 0);
+    if (origin !== null) {
+      origin.applyEuler(new Euler(0, angle, 0));
+    }
+  }
   // function requestHitTest(ray){
   //   xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
   //     if (results.length) {
