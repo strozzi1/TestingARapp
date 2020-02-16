@@ -69,7 +69,7 @@ scene.add( cube );
   let xrViewSpace = null;
   var xrHitTestSource;
   var arActivated = false;
-
+  var reticle;
   // WebGL scene globals.
   let gl = null;
 
