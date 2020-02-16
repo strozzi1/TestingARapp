@@ -49,11 +49,11 @@ document.body.appendChild(renderer.domElement);
 function init() {
 
   //Load in Models
-  var geometry = new BoxGeometry( 10, 10, 10 );
+  var geometry = new BoxGeometry( 0.1, 0.1, 0.1 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  cube = new Mesh( geometry, green );
-  scene.add( cube );
+  cube = new Mesh( geometry, yellow );
+
 
   // var modelObj;
   // var loader = new GLTFLoader();
@@ -220,13 +220,15 @@ function checkSupportedState() {
     circle.position.y = 0.03;
 
     //TODO: box to be atop retical
+    cube.position.y = 0.1;
 
     reticle.add(circle);
+    reticle.add(cube);
     reticle.name = 'reticle';
     scene.add(reticle)
   }
 
-  //Levels out the redical?
+  //Levels out the redical? NEEDED?
   function lookAtOnY(looker, target, origin) {
     const targetPos = new Vector3().setFromMatrixPosition(target.matrixWorld);
 
