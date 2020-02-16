@@ -162,6 +162,7 @@ var render = () => {
 
   function renderXR(timestamp, xrFrame){
     console.log(xrFrame);
+
     if (!xrFrame || !xrSession || !arActivated){
       if (!xrFrame){
         console.log("XRFRAME FAIL");
@@ -177,22 +178,22 @@ var render = () => {
       return;
     }
 
-    // let pose = xrFrame.getViewerPose(xrRefSpace);
-    // if (!pose){
-    //   console.log("No pose");
-    //   xrSession.requestAnimationFrame((...args) => renderXR(...args));
-    //   return;
-    // }
+    let pose = xrFrame.getViewerPose(xrRefSpace);
+    if (!pose){
+      console.log("No pose");
+      xrSession.requestAnimationFrame(renderXR);
+      return;
+    }
 
     // ratical
 
     let xrLayer = xrSession.renderState.baseLayer;
     renderer.setFramebuffer(xrLayer.framebuffer); //bindFramebuffer
 
-    // for (let xrView of pose.views){
-    //   let viewport = xrLayer.getViewport(xrView);
-    //   renderView(xrView, viewport);
-    // }
+    for (let xrView of pose.views){
+      let viewport = xrLayer.getViewport(xrView);
+      renderView(xrView, viewport);
+    }
 
     xrSession.requestAnimationFrame(renderXR);
   }
@@ -202,9 +203,9 @@ var render = () => {
     const viewMatrix = xrView.transform.inverse.matrix;
 
     //camera
-    // this._camera.projectionMatrix.fromArray(xrView.projectionMatrix);
-    // this._camera.matrix.fromArray(viewMatrix).getInverse(this._camera.matrix);
-    // this._camera.updateMatrixWorld(true);
+    camera.projectionMatrix.fromArray(xrView.projectionMatrix);
+    camera.matrix.fromArray(viewMatrix).getInverse(this._camera.matrix);
+    camera.updateMatrixWorld(true);
 
     renderer.render(scene, camera)
   }
