@@ -183,6 +183,8 @@ var render = () => {
       console.log("No pose");
       xrSession.requestAnimationFrame(renderXR);
       return;
+    } else {
+      console.log("pose");
     }
 
     // ratical
@@ -199,6 +201,7 @@ var render = () => {
   }
 
   function renderView(xrView, viewport){
+    console.log("RenderView function");
     renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
     const viewMatrix = xrView.transform.inverse.matrix;
 
