@@ -206,9 +206,9 @@ var render = () => {
     const viewMatrix = xrView.transform.inverse.matrix;
 
     //camera
-    camera.projectionMatrix.fromArray(xrView.projectionMatrix);
-    camera.matrix.fromArray(viewMatrix).getInverse(this.camera.matrix);
-    camera.updateMatrixWorld(true);
+    // camera.projectionMatrix.fromArray(xrView.projectionMatrix);
+    // camera.matrix.fromArray(viewMatrix).getInverse(this.camera.matrix);
+    // camera.updateMatrixWorld(true);
 
     renderer.render(scene, camera)
   }
