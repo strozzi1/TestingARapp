@@ -137,13 +137,27 @@ scene.add( cube );
     const y=0;
     let raycaster = new Raycaster();
     raycaster.setFromCamera({ x, y }, camera);
+
     let rayOrigin = raycaster.ray.origin;
     let rayDirection = raycaster.ray.direction;
     let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
       {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
 
     //TODO: test whether object exists
-    requestHitTest(ray);
+    //requestHitTest(ray);
+    xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
+      if (results.length) {
+        console.log("raycast good");
+        let hitResult = results[0];
+        cube.visible = true; //needed?
+        let hitMatrix = new Matrix4();
+        hitMatrix.fromArray(hitResult.hitMatrix);
+        cube.position.setFromMatrixPosition(hitMatrix);
+
+      } else {
+        console.log(results);
+      }
+    });
 
     let xrLayer = xrSession.renderState.baseLayer;
     renderer.setFramebuffer(xrLayer.framebuffer); //bindFramebuffer
@@ -162,28 +176,28 @@ scene.add( cube );
     const viewMatrix = xrView.transform.inverse.matrix;
 
     //camera
-    // camera.projectionMatrix.fromArray(xrView.projectionMatrix);
-    // camera.matrix.fromArray(viewMatrix).getInverse(this.camera.matrix);
-    // camera.updateMatrixWorld(true);
+    camera.projectionMatrix.fromArray(xrView.projectionMatrix);
+    camera.matrix.fromArray(viewMatrix).getInverse(camera.matrix);
+    camera.updateMatrixWorld(true);
 
     renderer.render(scene, camera)
   }
 
-  function requestHitTest(ray){
-    xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
-      if (results.length) {
-        console.log("raycast good");
-        let hitResult = results[0];
-        cube.visible = true; //needed?
-        let hitMatrix = new Matrix4();
-        hitMatrix.fromArray(hitResult.hitMatrix);
-        cube.position.setFromMatrixPosition(hitMatrix);
-
-      } else {
-        console.log(results);
-      }
-    }).catch((error) => {console.log("Hit Test Failed: " + error)});
-  }
+  // function requestHitTest(ray){
+  //   xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
+  //     if (results.length) {
+  //       console.log("raycast good");
+  //       let hitResult = results[0];
+  //       cube.visible = true; //needed?
+  //       let hitMatrix = new Matrix4();
+  //       hitMatrix.fromArray(hitResult.hitMatrix);
+  //       cube.position.setFromMatrixPosition(hitMatrix);
+  //
+  //     } else {
+  //       console.log(results);
+  //     }
+  //   }).catch((error) => {console.log("Hit Test Failed: " + error)});
+  // }
 
   //Check if AR is supported on the device
   function checkSupportedState() {
