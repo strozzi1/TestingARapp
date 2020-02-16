@@ -166,9 +166,12 @@ var render = () => {
 
     let pose = xrFrame.getViewerPose(xrRefSpace);
     if (!pose){
+      console.log("No pose");
       xrSession.requestAnimationFrame((...args) => renderXR(...args));
       return;
     }
+
+    // ratical
 
     let xrLayer = xrSession.renderState.baseLayer;
     renderer.setFramebuffer(xrLayer.framebuffer); //bindFramebuffer
