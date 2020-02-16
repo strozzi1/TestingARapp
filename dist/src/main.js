@@ -148,7 +148,7 @@ var render = () => {
   }
 
   function renderXR(timestamp, xrFrame){
-    console.log("Render Loop");
+    console.log(xrFrame);
     if (!xrFrame || !xrSession || !arActivated){
       if (!xrFrame){
         console.log("XRFRAME FAIL");
@@ -161,7 +161,7 @@ var render = () => {
       if (!arActivated){
         console.log("oups XD");
       }
-      //return;
+      return;
     }
 
     let pose = xrFrame.getViewerPose(xrRefSpace);
