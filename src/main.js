@@ -14,7 +14,10 @@ var scene = new Scene();
 scene.background = null;
 
 var camera= new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 1, 100000);
+scene.add(camera);
+
 var renderer = new WebGLRenderer({antialias: true});
+
 
 //camera
 function createCamera() {
