@@ -1,5 +1,5 @@
 import {Workbox} from 'workbox-window';
-import {WebGLRenderer, Scene, PerspectiveCamera, PointLight, BoxGeometry, MeshBasicMaterial, Mesh, Vector3} from 'three';
+import {WebGLRenderer, Scene, PerspectiveCamera, PointLight, BoxGeometry, MeshBasicMaterial, Mesh, Vector3, Raycaster} from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -41,43 +41,11 @@ renderer.autoClear = false; //needed?
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-var geometry = new BoxGeometry( 100, 100, 100 );
+var geometry = new BoxGeometry( 10, 10, 10 );
 var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
 var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-
 var cube = new Mesh( geometry, green );
-
 scene.add( cube );
-
-camera.position.z = 1000;
-
-var render = () => {
-  requestAnimationFrame( render );
-
-  renderer.render( scene, camera);
-};
-
-
-
-//RENDER
-// renderView(xrView, viewport) {
-//     this._renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
-//     const viewMatrix = xrView.transform.inverse.matrix;
-//     // Update the camera matrices.
-//     this._camera.projectionMatrix.fromArray(xrView.projectionMatrix);
-//     this._camera.matrix.fromArray(viewMatrix).getInverse(this._camera.matrix);
-//     this._camera.updateMatrixWorld(true);
-//
-//     this._renderer.render(this._scene, this._camera);
-//   }
-
-
-
-
-// var light = new PointLight( 0xfffee8, 10, 0, 0 );
-// light.position.z = 1500;
-// scene.add(light);
-
 
 // var modelObj;
 // var loader = new GLTFLoader();
@@ -103,7 +71,6 @@ var render = () => {
 // }
 
 
-//TESTING CODE:
   let xrButton = document.getElementById('xr-button');
   let xrSession = null;
   let xrRefSpace = null;
@@ -124,7 +91,7 @@ var render = () => {
   async function toggleAR(){
     if (arActivated){
       console.log("AR is already activated");
-      return; //Would close down the XR
+      return; //TODO: Would close down the XR
     }
     return activateAR();
   }
@@ -133,14 +100,15 @@ var render = () => {
     try{
       xrSession = await navigator.xr.requestSession('immersive-ar');
       xrRefSpace = await xrSession.requestReferenceSpace('local');
-      //handle select
+
+      //TODO: handle select
 
       let gl = renderer.getContext();
       await gl.makeXRCompatible();
       let layer = new XRWebGLLayer(xrSession, gl);
       xrSession.updateRenderState({ baseLayer: layer });
 
-      //end eventlistener
+      //TODO 'end' eventlistener
 
       xrSession.requestAnimationFrame(renderXR);
       arActivated = true;
@@ -150,18 +118,6 @@ var render = () => {
       console.log("Catch: "+ error);
     }
   }
-
-  // function onXRFrame(t, frame) {
-  //   //let session = frame.session;
-  //   let xrLayer = session.renderState.baseLayer;
-  //   renderer.setFramebuffer(xrLayer.framebuffer);
-  //   session.requestAnimationFrame(onXRFrame);
-  //   let pose = frame.getViewerPose(xrRefSpace);
-  //
-  //   if (pose){
-  //     console.log("POSE WORKS");
-  //   }
-  // }
 
   function renderXR(timestamp, xrFrame){
     console.log(xrFrame);
@@ -190,7 +146,17 @@ var render = () => {
       console.log("pose");
     }
 
-    // ratical
+    const x=0;
+    const y=0;
+    let raycaster = new Raycaster();
+    raycaster.setFromCamera({ x, y }, camera);
+    let rayOrigin = raycaster.ray.origin;
+    let rayDirection = raycaster.ray.direction;
+    let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
+      {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
+
+    //TODO: test whether object exists
+    requestHitTest(ray);
 
     let xrLayer = xrSession.renderState.baseLayer;
     renderer.setFramebuffer(xrLayer.framebuffer); //bindFramebuffer
@@ -216,6 +182,21 @@ var render = () => {
     renderer.render(scene, camera)
   }
 
+  function requestHitTest(ray){
+    xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
+      if (results.length) {
+        console.log("raycast good");
+        let hitResult = results[0];
+        cube.visible = true; //needed?
+        let hitMatrix = new Matrix4();
+        hitMatrix.fromArray(hitResult.hitMatrix);
+        cube.position.setFromMatrixPosition(hitMatrix);
+
+      } else {
+        console.log("raycast failed");
+      }
+    }).catch((error) => {console.log("Hit Test Failed: " + error)});
+  }
 
   //Check if AR is supported on the device
   function checkSupportedState() {
@@ -232,82 +213,4 @@ var render = () => {
     });
   }
 
-
-
-  function onButtonClicked() {
-    if (!xrSession) {
-        // Ask for an optional DOM Overlay, see https://immersive-web.github.io/dom-overlays/
-        // Use BODY as the root element.
-
-        console.log("AR Start");
-
-        navigator.xr.requestSession('immersive-ar'
-        // , {
-        //     optionalFeatures: ['dom-overlay'],
-        //     domOverlay: {root: document.body}
-        // }
-      ).then(onSessionStarted, onRequestSessionError);
-    } else {
-      //xrSession.end();
-      console.log("AR ENDED");
-    }
-  }
-
-  // async function onSessionStarted(session) {
-  //   console.log("AR session started");
-  //   xrSession = session;
-  //
-  //   session.requestReferenceSpace('local');
-  //
-  //   let gl = renderer.getContext();
-  //   await gl.makeXRCompatible();
-  //   let layer = new XRWebGLLayer(session, gl);
-  //   session.updateRenderState({ baseLayer: layer });
-  //
-  //   let xrLayer = session.baseLayer;
-  //   renderer.context.bindFramebuffer(renderer.context.FRAMEBUFFER, xrLayer.framebuffer);
-  //
-  //   //Pose goes here
-  //
-  //   session.requestAnimationFrame(onXRFrame);
-
-
-    // xrButton.innerHTML = 'Exit AR';
-
-    // Show which type of DOM Overlay got enabled (if any)
-    // document.getElementById('session-info').innerHTML = 'DOM Overlay type: ' + session.domOverlayState.type;
-    //
-    // session.addEventListener('end', onSessionEnded);
-    // let canvas = document.createElement('canvas');
-    //
-    // gl = canvas.getContext('webgl', {
-    //   xrCompatible: true
-    // });
-    // session.updateRenderState({ baseLayer: new XRWebGLLayer(session, gl) });
-    // session.requestReferenceSpace('local').then((refSpace) => {
-    //   xrRefSpace = refSpace;
-    //   session.requestAnimationFrame(onXRFrame);
-    // });
-  // }
-
-  function onRequestSessionError(ex) {
-    alert("Failed to start immersive AR session.");
-    console.error(ex.message);
-  }
-
-      // function onEndSession(session) {
-      //   session.end();
-      // }
-      //
-      // function onSessionEnded(event) {
-      //   xrSession = null;
-      //   xrButton.innerHTML = 'Enter AR';
-      //   document.getElementById('session-info').innerHTML = '';
-      //   gl = null;
-      // }
-
-
-
-      initXR();
-
-// render();
+  initXR();
