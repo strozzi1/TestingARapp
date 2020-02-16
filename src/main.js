@@ -8,11 +8,25 @@ import {AmbientLight, AnimationMixer, Box3, CircleGeometry, Clock, CubeTextureLo
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 
-
+//Service Worker
 if ("serviceWorker" in navigator) {
   const wb = new Workbox('service-worker.js');
   wb.register();
 }
+
+//variables
+var cube;
+
+let xrButton = document.getElementById('xr-button');
+let xrSession = null;
+let xrRefSpace = null;
+let xrViewSpace = null;
+
+var arActivated = false;
+var reticle;
+// WebGL scene globals.
+let gl = null;
+
 
 //Scene amd Camera
 var scene = new Scene();
@@ -24,63 +38,69 @@ camera.matrixAutoUpdate = false;
 scene.add(camera);
 
 var renderer = new WebGLRenderer({antialias: true});
-
-//scene.matrixAutoUpdate = false; //Alexis has it on the camera
 renderer.autoClear = false; //needed?
-
 
 //Renderer
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-var geometry = new BoxGeometry( 10, 10, 10 );
-var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
-var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-var cube = new Mesh( geometry, green );
-scene.add( cube );
 
-// var modelObj;
-// var loader = new GLTFLoader();
-// loader.load(
-//   'models/Earth.glb',
-//   gltf => loadModel (gltf),
-//   xhr => onProgress(xhr),
-//   error => onError(error)
-// );
-//
-// var loadModel = (gltf) => {
-//   modelObj = gltf.scene;
-//   modelObj.name = 'model';
-//   scene.add(modelObj);
-// };
-//
-// var onProgress = (xhr) => {
-//   //console.log((xhr.loaded / xhr.total *100) + '% loaded');
-// };
-//
-// var onError = (error) => {
-//   console.log(error);
-// }
+//Inital function that starts AR off. Establishes AR to button with eventlistener
+function init() {
 
+  //Load in Models
+  var geometry = new BoxGeometry( 10, 10, 10 );
+  var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
+  var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
+  cube = new Mesh( geometry, green );
+  scene.add( cube );
 
-  let xrButton = document.getElementById('xr-button');
-  let xrSession = null;
-  let xrRefSpace = null;
-  let xrViewSpace = null;
-  var xrHitTestSource;
-  var arActivated = false;
-  var reticle;
-  // WebGL scene globals.
-  let gl = null;
+  // var modelObj;
+  // var loader = new GLTFLoader();
+  // loader.load(
+  //   'models/Earth.glb',
+  //   gltf => loadModel (gltf),
+  //   xhr => onProgress(xhr),
+  //   error => onError(error)
+  // );
+  //
+  // var loadModel = (gltf) => {
+  //   modelObj = gltf.scene;
+  //   modelObj.name = 'model';
+  //   scene.add(modelObj);
+  // };
+  //
+  // var onProgress = (xhr) => {
+  //   //console.log((xhr.loaded / xhr.total *100) + '% loaded');
+  // };
+  //
+  // var onError = (error) => {
+  //   console.log(error);
+  // }
 
-  //Inital function that starts AR off. Establishes AR to button with eventlistener
-  function initXR() {
-    if (navigator.xr) {
-      xrButton.addEventListener('click', toggleAR);
-      //navigator.xr.addEventListener('devicechange', checkSupportedState);
-      //checkSupportedState();
-    }
+  if (navigator.xr) {
+    checkSupportedState();
   }
+}
+
+//Check if AR is supported on the device
+function checkSupportedState() {
+  navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
+    if (supported) {
+      // xrButton.innerHTML = 'Enter AR';
+
+      //TODO: EventListeners for AR
+      xrButton.addEventListener('click', toggleAR);
+      console.log("AR READY!");
+    } else {
+
+      // xrButton.innerHTML = 'AR not found';
+      console.log("AR unavailable");
+    }
+
+    // xrButton.disabled = !supported;
+  });
+}
 
   async function toggleAR(){
     if (arActivated){
@@ -121,31 +141,16 @@ scene.add( cube );
   }
 
   function renderXR(timestamp, xrFrame){
-    console.log(xrFrame);
 
     if (!xrFrame || !xrSession || !arActivated){
-      // if (!xrFrame){
-      //   console.log("XRFRAME FAIL");
-      // }
-      //
-      // if (!xrSession){
-      //   console.log("XRSESSION FAIL");
-      // }
-      //
-      // if (!arActivated){
-      //   console.log("oups XD");
-      // }
       return;
     }
 
     let pose = xrFrame.getViewerPose(xrRefSpace);
     if (!pose){
-      //console.log("No pose");
       xrSession.requestAnimationFrame(renderXR);
       return;
-    } //else {
-    //   console.log("pose");
-    // }
+    }
 
     if (!reticle)
       createReticle();
@@ -166,30 +171,17 @@ scene.add( cube );
       if (results.length) {
         console.log("raycast good");
         let hitResult = results[0];
-        reticle.visible = true; //needed?
+        reticle.visible = true;
         let hitMatrix = new Matrix4();
         hitMatrix.fromArray(hitResult.hitMatrix);
         reticle.position.setFromMatrixPosition(hitMatrix);
-        lookAtOnY(reticle, camera, null);
+        //lookAtOnY(reticle, camera, null); //needed
 
       } else {
         console.log(results);
         reticle.visible = false;
       }
     });
-
-    //Did get it to show up but errors
-    // if (xrHitTestSource && pose){
-    //   console.log("new Way");
-    //   let hitTestResults = xrFrame.getHitTestResults(xrHitTestSource);
-    //   if (hitTestResults.length > 0){
-    //     console.log("> 0");
-    //     let testPose = hitTestResults[0].getPose(xrRefSpace);
-    //     cube.visible = true;
-    //     cube.matrix = testPose.transform.matrix;
-    //   }
-    // }
-
 
     let xrLayer = xrSession.renderState.baseLayer;
     renderer.setFramebuffer(xrLayer.framebuffer); //bindFramebuffer
@@ -203,7 +195,6 @@ scene.add( cube );
   }
 
   function renderView(xrView, viewport){
-    //console.log("RenderView function");
     renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
     const viewMatrix = xrView.transform.inverse.matrix;
 
@@ -221,17 +212,21 @@ scene.add( cube );
     }
 
     reticle = new Object3D();
+
     let ringGeometry = new RingGeometry(0.1, 0.11, 24, 1);
-    let material = new MeshBasicMaterial({ color: 0xffffff });
+    let material = new MeshBasicMaterial({ color: 0x34d2eb });
     ringGeometry.applyMatrix(new Matrix4().makeRotationX(ThreeMath.degToRad(-90)));
     let circle = new Mesh(ringGeometry, material);
     circle.position.y = 0.03;
+
+    //TODO: box to be atop retical
 
     reticle.add(circle);
     reticle.name = 'reticle';
     scene.add(reticle)
   }
 
+  //Levels out the redical?
   function lookAtOnY(looker, target, origin) {
     const targetPos = new Vector3().setFromMatrixPosition(target.matrixWorld);
 
@@ -241,35 +236,6 @@ scene.add( cube );
       origin.applyEuler(new Euler(0, angle, 0));
     }
   }
-  // function requestHitTest(ray){
-  //   xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
-  //     if (results.length) {
-  //       console.log("raycast good");
-  //       let hitResult = results[0];
-  //       cube.visible = true; //needed?
-  //       let hitMatrix = new Matrix4();
-  //       hitMatrix.fromArray(hitResult.hitMatrix);
-  //       cube.position.setFromMatrixPosition(hitMatrix);
-  //
-  //     } else {
-  //       console.log(results);
-  //     }
-  //   }).catch((error) => {console.log("Hit Test Failed: " + error)});
-  // }
 
-  //Check if AR is supported on the device
-  function checkSupportedState() {
-    navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
-      if (supported) {
-        // xrButton.innerHTML = 'Enter AR';
-        console.log("AR READY!");
-      } else {
-        // xrButton.innerHTML = 'AR not found';
-        console.log("AR unavailable");
-      }
 
-      // xrButton.disabled = !supported;
-    });
-  }
-
-  initXR();
+  init();
