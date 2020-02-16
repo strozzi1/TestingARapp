@@ -61,6 +61,8 @@ scene.add( cube );
   let xrButton = document.getElementById('xr-button');
   let xrSession = null;
   let xrRefSpace = null;
+  let xrViewSpace = null;
+  var xrHitTestSource;
   var arActivated = false;
 
   // WebGL scene globals.
@@ -85,8 +87,15 @@ scene.add( cube );
 
   async function activateAR(){
     try{
-      xrSession = await navigator.xr.requestSession('immersive-ar');
+      xrSession = await navigator.xr.requestSession('immersive-ar', {requiredFeatures: ['local', 'hit-test']});
       xrRefSpace = await xrSession.requestReferenceSpace('local');
+
+      xrSession.requestReferenceSpace('viewer').then((refSpace) => {
+        xrViewSpace = refSpace;
+        xrSession.requestHitTestSource({ space: xrViewSpace }).then((hitTestSource) => {
+          xrHitTestSource = hitTestSource;
+        });
+      });
 
       //TODO: handle select
 
@@ -148,16 +157,29 @@ scene.add( cube );
     xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
       if (results.length) {
         console.log("raycast good");
-        let hitResult = results[0];
-        cube.visible = true; //needed?
-        let hitMatrix = new Matrix4();
-        hitMatrix.fromArray(hitResult.hitMatrix);
-        cube.position.setFromMatrixPosition(hitMatrix);
+        // let hitResult = results[0];
+        // cube.visible = true; //needed?
+        // let hitMatrix = new Matrix4();
+        // hitMatrix.fromArray(hitResult.hitMatrix);
+        // cube.position.setFromMatrixPosition(hitMatrix);
 
       } else {
         console.log(results);
       }
     });
+
+
+    if (xrHitTestSource && pose){
+      console.log("new Way");
+      let hitTestResults = xrFrame.getHitTestResults(xrHitTestSource);
+      if (hitTestResults.length > 0){
+        console.log("> 0");
+        let testPose = hitTestResults[0].getPose(xrRefSpace);
+        cube.visible = true;
+        cube.matrix = testPose.transform.matrix;
+      }
+    }
+
 
     let xrLayer = xrSession.renderState.baseLayer;
     renderer.setFramebuffer(xrLayer.framebuffer); //bindFramebuffer
