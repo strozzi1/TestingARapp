@@ -157,28 +157,28 @@ scene.add( cube );
     xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
       if (results.length) {
         console.log("raycast good");
-        // let hitResult = results[0];
-        // cube.visible = true; //needed?
-        // let hitMatrix = new Matrix4();
-        // hitMatrix.fromArray(hitResult.hitMatrix);
-        // cube.position.setFromMatrixPosition(hitMatrix);
+        let hitResult = results[0];
+        cube.visible = true; //needed?
+        let hitMatrix = new Matrix4();
+        hitMatrix.fromArray(hitResult.hitMatrix);
+        cube.position.setFromMatrixPosition(hitMatrix);
 
       } else {
         //console.log(results);
       }
     });
 
-
-    if (xrHitTestSource && pose){
-      console.log("new Way");
-      let hitTestResults = xrFrame.getHitTestResults(xrHitTestSource);
-      if (hitTestResults.length > 0){
-        console.log("> 0");
-        let testPose = hitTestResults[0].getPose(xrRefSpace);
-        cube.visible = true;
-        cube.matrix = testPose.transform.matrix;
-      }
-    }
+    //Did get it to show up
+    // if (xrHitTestSource && pose){
+    //   console.log("new Way");
+    //   let hitTestResults = xrFrame.getHitTestResults(xrHitTestSource);
+    //   if (hitTestResults.length > 0){
+    //     console.log("> 0");
+    //     let testPose = hitTestResults[0].getPose(xrRefSpace);
+    //     cube.visible = true;
+    //     cube.matrix = testPose.transform.matrix;
+    //   }
+    // }
 
 
     let xrLayer = xrSession.renderState.baseLayer;
