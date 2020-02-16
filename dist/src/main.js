@@ -50,10 +50,10 @@ function init() {
 
   //Load in Models
   //TODO new function for adding models
-  var geometry = new BoxGeometry( 0.01, 0.01, 0.01 );
+  var geometry = new BoxGeometry( 0.1, 0.1, 0.1 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  cube = new Mesh( geometry, yellow );
+  cube = new Mesh( geometry, green );
 
 
   var loader = new GLTFLoader();
@@ -145,6 +145,9 @@ function checkSupportedState() {
       return;
     }
 
+    //TODO: solarRender() goes here? 2
+
+    //TODO: based upon a bool to see if our solar system is set or not
     if (!reticle)
       createReticle();
 
@@ -159,7 +162,7 @@ function checkSupportedState() {
       {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
 
     //TODO: test whether object exists
-    //requestHitTest(ray);
+  
     xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
       if (results.length) {
         console.log("raycast good");
@@ -196,6 +199,8 @@ function checkSupportedState() {
     camera.matrix.fromArray(viewMatrix).getInverse(camera.matrix);
     camera.updateMatrixWorld(true);
 
+    //TODO: solarRender() goes here? 1
+
     renderer.render(scene, camera)
   }
 
@@ -206,7 +211,7 @@ function checkSupportedState() {
 
     reticle = new Object3D();
 
-    let ringGeometry = new RingGeometry(0.01, 0.011, 24, 1);
+    let ringGeometry = new RingGeometry(0.1, 0.11, 24, 1);
     let material = new MeshBasicMaterial({ color: 0x34d2eb });
     ringGeometry.applyMatrix(new Matrix4().makeRotationX(ThreeMath.degToRad(-90)));
     let circle = new Mesh(ringGeometry, material);
