@@ -29,8 +29,9 @@ function createCamera() {
     // this._camera.matrixAutoUpdate = false;
 }
 
-scene.matrixAutoUpdate = false; //Alexis has it on the camera
-renderer.autoClear = false;
+camera.matrixAutoUpdate = false; //needed?
+//scene.matrixAutoUpdate = false; //Alexis has it on the camera
+renderer.autoClear = false; //needed?
 
 
 //Renderer
@@ -138,7 +139,7 @@ var render = () => {
 
       //end eventlistener
 
-      xrSession.requestAnimationFrame((...args) => renderXR(...args));
+      xrSession.requestAnimationFrame(renderXR);
       arActivated = true;
 
 
@@ -146,6 +147,18 @@ var render = () => {
       console.log("Catch: "+ error);
     }
   }
+
+  // function onXRFrame(t, frame) {
+  //   //let session = frame.session;
+  //   let xrLayer = session.renderState.baseLayer;
+  //   renderer.setFramebuffer(xrLayer.framebuffer);
+  //   session.requestAnimationFrame(onXRFrame);
+  //   let pose = frame.getViewerPose(xrRefSpace);
+  //
+  //   if (pose){
+  //     console.log("POSE WORKS");
+  //   }
+  // }
 
   function renderXR(timestamp, xrFrame){
     console.log(xrFrame);
@@ -164,24 +177,24 @@ var render = () => {
       return;
     }
 
-    let pose = xrFrame.getViewerPose(xrRefSpace);
-    if (!pose){
-      console.log("No pose");
-      xrSession.requestAnimationFrame((...args) => renderXR(...args));
-      return;
-    }
+    // let pose = xrFrame.getViewerPose(xrRefSpace);
+    // if (!pose){
+    //   console.log("No pose");
+    //   xrSession.requestAnimationFrame((...args) => renderXR(...args));
+    //   return;
+    // }
 
     // ratical
 
     let xrLayer = xrSession.renderState.baseLayer;
     renderer.setFramebuffer(xrLayer.framebuffer); //bindFramebuffer
 
-    for (let xrView of pose.views){
-      let viewport = xrLayer.getViewport(xrView);
-      renderView(xrView, viewport);
-    }
+    // for (let xrView of pose.views){
+    //   let viewport = xrLayer.getViewport(xrView);
+    //   renderView(xrView, viewport);
+    // }
 
-    xrSession.requestAnimationFrame((...args) => renderXR(...args));
+    xrSession.requestAnimationFrame(renderXR);
   }
 
   function renderView(xrView, viewport){
@@ -233,23 +246,23 @@ var render = () => {
     }
   }
 
-  async function onSessionStarted(session) {
-    console.log("AR session started");
-    xrSession = session;
-
-    session.requestReferenceSpace('local');
-
-    let gl = renderer.getContext();
-    await gl.makeXRCompatible();
-    let layer = new XRWebGLLayer(session, gl);
-    session.updateRenderState({ baseLayer: layer });
-
-    let xrLayer = session.baseLayer;
-    renderer.context.bindFramebuffer(renderer.context.FRAMEBUFFER, xrLayer.framebuffer);
-
-    //Pose goes here
-
-    session.requestAnimationFrame(onXRFrame);
+  // async function onSessionStarted(session) {
+  //   console.log("AR session started");
+  //   xrSession = session;
+  //
+  //   session.requestReferenceSpace('local');
+  //
+  //   let gl = renderer.getContext();
+  //   await gl.makeXRCompatible();
+  //   let layer = new XRWebGLLayer(session, gl);
+  //   session.updateRenderState({ baseLayer: layer });
+  //
+  //   let xrLayer = session.baseLayer;
+  //   renderer.context.bindFramebuffer(renderer.context.FRAMEBUFFER, xrLayer.framebuffer);
+  //
+  //   //Pose goes here
+  //
+  //   session.requestAnimationFrame(onXRFrame);
 
 
     // xrButton.innerHTML = 'Exit AR';
@@ -268,7 +281,7 @@ var render = () => {
     //   xrRefSpace = refSpace;
     //   session.requestAnimationFrame(onXRFrame);
     // });
-  }
+  // }
 
   function onRequestSessionError(ex) {
     alert("Failed to start immersive AR session.");
@@ -286,17 +299,7 @@ var render = () => {
       //   gl = null;
       // }
 
-  function onXRFrame(t, frame) {
-    //let session = frame.session;
-    let xrLayer = session.renderState.baseLayer;
-    renderer.setFramebuffer(xrLayer.framebuffer);
-    session.requestAnimationFrame(onXRFrame);
-    let pose = frame.getViewerPose(xrRefSpace);
 
-    if (pose){
-      console.log("POSE WORKS");
-    }
-  }
 
       initXR();
 
