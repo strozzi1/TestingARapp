@@ -161,7 +161,7 @@ var render = () => {
       if (!arActivated){
         console.log("oups XD");
       }
-      return;
+      //return;
     }
 
     let pose = xrFrame.getViewerPose(xrRefSpace);
@@ -171,27 +171,27 @@ var render = () => {
     }
 
     let xrLayer = xrSession.renderState.baseLayer;
-    renderer.setFramebuffer(xrLayer.framebuffer);
+    renderer.setFramebuffer(xrLayer.framebuffer); //bindFramebuffer
 
-    // for (let xrView of pose.views){
-    //   let viewport = xrLayer.getViewport(xrView);
-    //   renderView(xrView, viewport);
-    // }
+    for (let xrView of pose.views){
+      let viewport = xrLayer.getViewport(xrView);
+      renderView(xrView, viewport);
+    }
 
     xrSession.requestAnimationFrame((...args) => renderXR(...args));
   }
 
-  // function renderView(xrView, viewport){
-  //   renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
-  //   const viewMatrix = xrView.transform.inverse.matrix;
-  //
-  //   //camera
-  //   this._camera.projectionMatrix.fromArray(xrView.projectionMatrix);
-  //   this._camera.matrix.fromArray(viewMatrix).getInverse(this._camera.matrix);
-  //   this._camera.updateMatrixWorld(true);
-  //
-  //   renderer.render(scene, camera)
-  // }
+  function renderView(xrView, viewport){
+    renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+    const viewMatrix = xrView.transform.inverse.matrix;
+
+    //camera
+    // this._camera.projectionMatrix.fromArray(xrView.projectionMatrix);
+    // this._camera.matrix.fromArray(viewMatrix).getInverse(this._camera.matrix);
+    // this._camera.updateMatrixWorld(true);
+
+    renderer.render(scene, camera)
+  }
 
 
   //Check if AR is supported on the device
