@@ -87,7 +87,7 @@ scene.add( cube );
 
   async function activateAR(){
     try{
-      xrSession = await navigator.xr.requestSession('immersive-ar', {requiredFeatures: ['local', 'hit-test']});
+      xrSession = await navigator.xr.requestSession('immersive-ar');
       xrRefSpace = await xrSession.requestReferenceSpace('local');
 
       xrSession.requestReferenceSpace('viewer').then((refSpace) => {
@@ -164,7 +164,7 @@ scene.add( cube );
         // cube.position.setFromMatrixPosition(hitMatrix);
 
       } else {
-        console.log(results);
+        //console.log(results);
       }
     });
 
