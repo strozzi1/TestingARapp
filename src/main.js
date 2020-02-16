@@ -13,26 +13,13 @@ if ("serviceWorker" in navigator) {
 var scene = new Scene();
 scene.background = null;
 
-var camera= new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 1, 100000);
+//var camera = new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 1, 100000);
+var camera = new PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 10000);
+camera.matrixAutoUpdate = false;
 scene.add(camera);
 
 var renderer = new WebGLRenderer({antialias: true});
 
-
-//camera
-function createCamera() {
-    // this._settings = MainApplication.CAMERA_SETTINGS;
-    // this._camera = new PerspectiveCamera(
-    //     this._settings.viewAngle,
-    //     this._aspect,
-    //     this._settings.near,
-    //     this._settings.far
-    // );
-    // // Disable autoupdating because these values will be coming from WebXR.
-    // this._camera.matrixAutoUpdate = false;
-}
-
-camera.matrixAutoUpdate = false; //needed?
 //scene.matrixAutoUpdate = false; //Alexis has it on the camera
 renderer.autoClear = false; //needed?
 
@@ -123,28 +110,28 @@ scene.add( cube );
     console.log(xrFrame);
 
     if (!xrFrame || !xrSession || !arActivated){
-      if (!xrFrame){
-        console.log("XRFRAME FAIL");
-      }
-
-      if (!xrSession){
-        console.log("XRSESSION FAIL");
-      }
-
-      if (!arActivated){
-        console.log("oups XD");
-      }
+      // if (!xrFrame){
+      //   console.log("XRFRAME FAIL");
+      // }
+      //
+      // if (!xrSession){
+      //   console.log("XRSESSION FAIL");
+      // }
+      //
+      // if (!arActivated){
+      //   console.log("oups XD");
+      // }
       return;
     }
 
     let pose = xrFrame.getViewerPose(xrRefSpace);
     if (!pose){
-      console.log("No pose");
+      //console.log("No pose");
       xrSession.requestAnimationFrame(renderXR);
       return;
-    } else {
-      console.log("pose");
-    }
+    } //else {
+    //   console.log("pose");
+    // }
 
     const x=0;
     const y=0;
@@ -170,7 +157,7 @@ scene.add( cube );
   }
 
   function renderView(xrView, viewport){
-    console.log("RenderView function");
+    //console.log("RenderView function");
     renderer.setViewport(viewport.x, viewport.y, viewport.width, viewport.height);
     const viewMatrix = xrView.transform.inverse.matrix;
 
@@ -193,7 +180,7 @@ scene.add( cube );
         cube.position.setFromMatrixPosition(hitMatrix);
 
       } else {
-        console.log("raycast failed");
+        console.log(results);
       }
     }).catch((error) => {console.log("Hit Test Failed: " + error)});
   }
