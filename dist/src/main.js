@@ -33,7 +33,7 @@ var scene = new Scene();
 scene.background = null;
 
 //var camera = new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 1, 100000);
-var camera = new PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 10000);
+var camera = new PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 10000000);
 camera.matrixAutoUpdate = false;
 scene.add(camera);
 
@@ -50,10 +50,10 @@ function init() {
 
   //Load in Models
   //TODO new function for adding models
-  var geometry = new BoxGeometry( 0.1, 0.1, 0.1 );
+  var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  cube = new Mesh( geometry, green );
+  cube = new Mesh( geometry, yellow );
 
 
   var loader = new GLTFLoader();
@@ -115,7 +115,7 @@ function checkSupportedState() {
       xrRefSpace = await xrSession.requestReferenceSpace('local');
 
 
-      //TODO: handle select
+      //TODO: touchSelectEvent()
 
       let gl = renderer.getContext();
       await gl.makeXRCompatible();
@@ -162,7 +162,7 @@ function checkSupportedState() {
       {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
 
     //TODO: test whether object exists
-  
+
     xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
       if (results.length) {
         console.log("raycast good");
@@ -204,27 +204,55 @@ function checkSupportedState() {
     renderer.render(scene, camera)
   }
 
-  function createReticle(){
-    if (reticle){
-      return;
-    }
+function touchSelectEvent() {
+  //TODO add function to get ray
+  const x=0;
+  const y=0;
+  let raycaster = new Raycaster();
+  raycaster.setFromCamera({ x, y }, camera);
 
-    reticle = new Object3D();
+  let rayOrigin = raycaster.ray.origin;
+  let rayDirection = raycaster.ray.direction;
+  let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
+    {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
 
-    let ringGeometry = new RingGeometry(0.1, 0.11, 24, 1);
-    let material = new MeshBasicMaterial({ color: 0x34d2eb });
-    ringGeometry.applyMatrix(new Matrix4().makeRotationX(ThreeMath.degToRad(-90)));
-    let circle = new Mesh(ringGeometry, material);
-    circle.position.y = 0.03;
+  // xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
+  //   if (results.length) {
+  //     console.log("hit raycast good");
+  //     let hitResult = results[0];
+  //     let hitMatrix = new Matrix4();
+  //     hitMatrix.fromArray(hitResult.hitMatrix);
+  //     //update position
+  //   } else {
+  //     console.log("No Go");
+  //   }
+  // }
+}
 
-    //TODO: box to be atop retical
-    cube.position.y = 1;
 
-    reticle.add(circle);
-    reticle.add(cube);
-    reticle.name = 'reticle';
-    scene.add(reticle)
+
+
+function createReticle(){
+  if (reticle){
+    return;
   }
+
+  reticle = new Object3D();
+
+  let ringGeometry = new RingGeometry(0.07, 0.9, 24, 1);
+  let material = new MeshBasicMaterial({ color: 0x34d2eb });
+  ringGeometry.applyMatrix(new Matrix4().makeRotationX(ThreeMath.degToRad(-90)));
+  let circle = new Mesh(ringGeometry, material);
+  circle.position.y = 0.03;
+
+  //TODO: box to be atop retical
+  cube.position.y = 0.4;
+
+  reticle.add(circle);
+  reticle.add(cube);
+  reticle.name = 'reticle';
+  scene.add(reticle)
+}
 
   //Levels out the redical? NEEDED?
   function lookAtOnY(looker, target, origin) {
