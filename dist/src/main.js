@@ -54,7 +54,7 @@ function init() {
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  cube = new Mesh( geometry, yellow );
+  cube = new Mesh( geometry, green );
 
 
   var loader = new GLTFLoader();
@@ -180,7 +180,7 @@ function checkSupportedState() {
         scene.add(cube);
         cube.position.setFromMatrixPosition(cubeMatrix);
 
-        modelObj.scale.set(0.05, 0.05, 0.05);
+        modelObj.scale.set(0.0005, 0.0005, 0.0005);
         cube.add(modelObj);
 
         if (reticle){
