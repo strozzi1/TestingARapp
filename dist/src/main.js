@@ -54,7 +54,7 @@ function init() {
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  cube = new Mesh( geometry, green );
+  cube = new Mesh( geometry, yellow );
 
 
   var loader = new GLTFLoader();
@@ -176,10 +176,14 @@ function checkSupportedState() {
         }
       });
     } else {
+
         var cubeMatrix = cube.matrixWorld
         scene.add(cube);
         cube.position.setFromMatrixPosition(cubeMatrix);
 
+        //TODO: get proper scale for the earth
+        //TODO: need to add light
+        //NOTE: cube is the origin point for the solar system
         modelObj.scale.set(0.0005, 0.0005, 0.0005);
         cube.add(modelObj);
 
@@ -190,6 +194,7 @@ function checkSupportedState() {
         //Animation here
         cube.rotation.y += 0.1;
         console.log(modelObj);
+        console.log(cube);
     }
 
     let xrLayer = xrSession.renderState.baseLayer;
