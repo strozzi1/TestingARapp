@@ -17,6 +17,7 @@ if ("serviceWorker" in navigator) {
 //variables
 var cube;
 var modelObj;
+var solarSystem = false;
 
 let xrButton = document.getElementById('xr-button');
 let xrSession = null;
@@ -53,7 +54,7 @@ function init() {
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  cube = new Mesh( geometry, yellow );
+  cube = new Mesh( geometry, green );
 
 
   var loader = new GLTFLoader();
@@ -77,7 +78,7 @@ function loadModel(gltf) {
 }
 
 function onProgress(xhr) {
-  //console.log((xhr.loaded / xhr.total *100) + '% loaded');
+  console.log((xhr.loaded / xhr.total *100) + '% loaded');
 }
 
 function onError(error) {
@@ -90,7 +91,6 @@ function checkSupportedState() {
     if (supported) {
       // xrButton.innerHTML = 'Enter AR';
 
-      //TODO: EventListeners for AR
       xrButton.addEventListener('click', toggleAR);
       console.log("AR READY!");
     } else {
@@ -115,7 +115,7 @@ function checkSupportedState() {
       xrRefSpace = await xrSession.requestReferenceSpace('local');
 
 
-      //TODO: touchSelectEvent()
+      xrSession.addEventListener('select', touchSelectEvent);
 
       let gl = renderer.getContext();
       await gl.makeXRCompatible();
@@ -148,36 +148,38 @@ function checkSupportedState() {
     //TODO: solarRender() goes here? 2
 
     //TODO: based upon a bool to see if our solar system is set or not
-    if (!reticle)
-      createReticle();
+    if (!solarSystem){
+      if (!reticle)
+        createReticle();
 
-    const x=0;
-    const y=0;
-    let raycaster = new Raycaster();
-    raycaster.setFromCamera({ x, y }, camera);
+      const x=0;
+      const y=0;
+      let raycaster = new Raycaster();
+      raycaster.setFromCamera({ x, y }, camera);
 
-    let rayOrigin = raycaster.ray.origin;
-    let rayDirection = raycaster.ray.direction;
-    let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
-      {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
+      let rayOrigin = raycaster.ray.origin;
+      let rayDirection = raycaster.ray.direction;
+      let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
+        {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
 
-    //TODO: test whether object exists
+      //TODO: test whether object exists
 
-    xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
-      if (results.length) {
-        console.log("raycast good");
-        let hitResult = results[0];
-        reticle.visible = true;
-        let hitMatrix = new Matrix4();
-        hitMatrix.fromArray(hitResult.hitMatrix);
-        reticle.position.setFromMatrixPosition(hitMatrix);
-        //lookAtOnY(reticle, camera, null); //needed
+      xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
+        if (results.length) {
+          console.log("raycast good");
+          let hitResult = results[0];
+          reticle.visible = true;
+          let hitMatrix = new Matrix4();
+          hitMatrix.fromArray(hitResult.hitMatrix);
+          reticle.position.setFromMatrixPosition(hitMatrix);
+          //lookAtOnY(reticle, camera, null); //needed
 
-      } else {
-        console.log("Keep looking");
-        reticle.visible = false;
-      }
-    });
+        } else {
+          console.log("Keep looking");
+          reticle.visible = false;
+        }
+      });
+    }
 
     let xrLayer = xrSession.renderState.baseLayer;
     renderer.setFramebuffer(xrLayer.framebuffer);
@@ -205,28 +207,38 @@ function checkSupportedState() {
   }
 
 function touchSelectEvent() {
+
+  if (solarSystem){
+    solarSystem = false;
+  } else {
+    solarSystem = true;
+  }
+
   //TODO add function to get ray
-  const x=0;
-  const y=0;
-  let raycaster = new Raycaster();
-  raycaster.setFromCamera({ x, y }, camera);
-
-  let rayOrigin = raycaster.ray.origin;
-  let rayDirection = raycaster.ray.direction;
-  let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
-    {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
-
+  // const x=0;
+  // const y=0;
+  // let raycaster = new Raycaster();
+  // raycaster.setFromCamera({ x, y }, camera);
+  //
+  // let rayOrigin = raycaster.ray.origin;
+  // let rayDirection = raycaster.ray.direction;
+  // let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
+  //   {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
+  //
   // xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
   //   if (results.length) {
   //     console.log("hit raycast good");
   //     let hitResult = results[0];
   //     let hitMatrix = new Matrix4();
   //     hitMatrix.fromArray(hitResult.hitMatrix);
+  //
+  //     solarSystem = true;
+  //
   //     //update position
   //   } else {
   //     console.log("No Go");
   //   }
-  // }
+  // };
 }
 
 
@@ -239,14 +251,14 @@ function createReticle(){
 
   reticle = new Object3D();
 
-  let ringGeometry = new RingGeometry(0.07, 0.9, 24, 1);
+  let ringGeometry = new RingGeometry(0.07, 0.09, 24, 1);
   let material = new MeshBasicMaterial({ color: 0x34d2eb });
   ringGeometry.applyMatrix(new Matrix4().makeRotationX(ThreeMath.degToRad(-90)));
   let circle = new Mesh(ringGeometry, material);
   circle.position.y = 0.03;
 
   //TODO: box to be atop retical
-  cube.position.y = 0.4;
+  cube.position.y = 0.2;
 
   reticle.add(circle);
   reticle.add(cube);
