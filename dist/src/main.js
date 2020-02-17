@@ -57,7 +57,7 @@ function init() {
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  originPoint = new Mesh( geometry, yellow );
+  originPoint = new Mesh( geometry, green );
 
 
   var loader = new GLTFLoader();
@@ -150,9 +150,9 @@ function checkSupportedState() {
     }
 
     if (!showSolarSystem){
-      if (!reticle){
-        createReticle();
-      }
+      //if (!reticle){
+      createReticle();
+      //}
 
       const x=0;
       const y=0;
@@ -193,10 +193,8 @@ function checkSupportedState() {
         }
 
         //Animation here
-        modelObj.rotation.y += 0.1;
+        //modelObj.rotation.y += 0.1;
 
-        // console.log(modelObj);
-        // console.log(originPoint);
     }
 
     let xrLayer = xrSession.renderState.baseLayer;
@@ -226,12 +224,7 @@ function touchSelectEvent() {
   if (showSolarSystem){
     //TODO Change this to a reset button when the solar system is in place
     showSolarSystem = false;
-    reticle.add(originPoint);
-
-    //Need to get the proper height
-    originPoint.position.y = 0.2;
-
-    //reset solar system (remove components from scene)
+    //reset solar system (remove components from scene) or hide them by making hidden
 
   } else {
     showSolarSystem = true;
@@ -240,7 +233,9 @@ function touchSelectEvent() {
     scene.add(originPoint);
     originPoint.position.setFromMatrixPosition(originPointMatrix);
 
-    //build solar system heiarchy
+    //remove retical from scene or hide
+
+    //build solar system heiarchy or reviele
     // modelObj.scale.set(0.0005, 0.0005, 0.0005);
     // originPoint.add(modelObj);
 
@@ -252,6 +247,11 @@ function touchSelectEvent() {
 
 function createReticle(){
   if (reticle){
+    var reticleMatrix = reticle.matrixWorld;
+    reticle.add(originPoint);
+    originPoint.position.setFromMatrixPosition(reticalMatrix);
+    //increment originPoint.y
+
     return;
   }
 
