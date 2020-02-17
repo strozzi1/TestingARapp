@@ -177,8 +177,9 @@ function checkSupportedState() {
       });
     } else {
         scene.add(cube);
+        cube.position.setFromMatrixPosition(reticle.matrixWorld);
         if (reticle){
-          reticle = null;
+          reticle.visible = false;
         }
         //Animation here
         cube.rotation.y += 0.1;
