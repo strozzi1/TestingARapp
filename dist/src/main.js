@@ -178,9 +178,11 @@ function checkSupportedState() {
     } else {
         scene.add(cube);
         cube.position.setFromMatrixPosition(reticle.matrixWorld);
+        cube.position.y = 0.2;
         if (reticle){
           reticle.visible = false;
         }
+        
         //Animation here
         cube.rotation.y += 0.1;
 
