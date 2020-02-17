@@ -54,7 +54,7 @@ function init() {
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  cube = new Mesh( geometry, yellow );
+  cube = new Mesh( geometry, green );
 
 
   var loader = new GLTFLoader();
@@ -160,8 +160,6 @@ function checkSupportedState() {
       let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
         {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
 
-      //TODO: test whether object exists
-
       xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
         if (results.length) {
           console.log("raycast good");
@@ -178,6 +176,7 @@ function checkSupportedState() {
         }
       });
     } else {
+        //Animation here
         cube.rotation.y += 0.1;
 
     }
@@ -210,10 +209,16 @@ function touchSelectEvent() {
   if (solarSystem){
     //TODO have a reset button when the solar system is in place
     solarSystem = false;
+
+    if (retical){
+      retical.visible = true;
+    }
   } else {
 
     solarSystem = true;
-    retical.visible = false;
+    if (redical){
+      retical.visible = false;
+    }
   }
 }
 
