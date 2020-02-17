@@ -57,7 +57,7 @@ function init() {
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  originPoint = new Mesh( geometry, yellow );
+  originPoint = new Mesh( geometry, green );
 
 
   var loader = new GLTFLoader();
@@ -182,11 +182,11 @@ function checkSupportedState() {
     } else {
 
       //TODO move where parent is defined so its not in the render function. move to touch event
-        var originPointMatrix = originPoint.matrixWorld
-        scene.add(originPoint);
-        originPoint.position.setFromMatrixPosition(originPointMatrix);
-        modelObj.scale.set(0.0005, 0.0005, 0.0005);
-        originPoint.add(modelObj);
+        // var originPointMatrix = originPoint.matrixWorld
+        // scene.add(originPoint);
+        // originPoint.position.setFromMatrixPosition(originPointMatrix);
+        // modelObj.scale.set(0.0005, 0.0005, 0.0005);
+        // originPoint.add(modelObj);
 
         if (reticle){
           reticle.visible = false;
@@ -224,10 +224,17 @@ function checkSupportedState() {
 
 function touchSelectEvent() {
   if (showSolarSystem){
-    //TODO have a reset button when the solar system is in place
+    //TODO Change this to a reset button when the solar system is in place
     showSolarSystem = false;
   } else {
     showSolarSystem = true;
+
+    //can access reticle and originPoint
+    var originPointMatrix = originPoint.matrixWorld;
+    scene.add(originPoint);
+    originPoint.position.setFromMatrixPosition(originPointMatrix);
+
+
     console.log(reticle);
     console.log(originPoint);
   }
