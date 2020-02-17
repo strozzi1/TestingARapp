@@ -54,7 +54,7 @@ function init() {
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  cube = new Mesh( geometry, green );
+  cube = new Mesh( geometry, yellow );
 
 
   var loader = new GLTFLoader();
@@ -78,7 +78,7 @@ function loadModel(gltf) {
 }
 
 function onProgress(xhr) {
-  console.log((xhr.loaded / xhr.total *100) + '% loaded');
+  // console.log((xhr.loaded / xhr.total *100) + '% loaded');
 }
 
 function onError(error) {
@@ -177,15 +177,15 @@ function checkSupportedState() {
       });
     } else {
         var cubeMatrix = cube.matrixWorld
-        scene.add(cube);
-        cube.position.setFromMatrixPosition(cubeMatrix);
-        // cube.position.y = 0.2;
+        scene.add(modelObj);
+        modelObj.scale.set(0.05, 0.05, 0.05);
+        modelObj.position.setFromMatrixPosition(cubeMatrix);
         if (reticle){
           reticle.visible = false;
         }
 
         //Animation here
-        cube.rotation.y += 0.1;
+        modelObj.rotation.y += 0.1;
 
     }
 
@@ -213,7 +213,6 @@ function checkSupportedState() {
   }
 
 function touchSelectEvent() {
-
   if (solarSystem){
     //TODO have a reset button when the solar system is in place
     solarSystem = false;
