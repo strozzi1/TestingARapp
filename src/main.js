@@ -224,6 +224,12 @@ function touchSelectEvent() {
   if (showSolarSystem){
     //TODO Change this to a reset button when the solar system is in place
     showSolarSystem = false;
+    
+    var reticleMatrix = reticle.matrixWorld;
+    reticle.add(originPoint);
+    originPoint.position.setFromMatrixPosition(reticleMatrix);
+    //increment originPoint.y
+
     //reset solar system (remove components from scene) or hide them by making hidden
 
   } else {
@@ -247,11 +253,6 @@ function touchSelectEvent() {
 
 function createReticle(){
   if (reticle){
-    var reticleMatrix = reticle.matrixWorld;
-    reticle.add(originPoint);
-    originPoint.position.setFromMatrixPosition(reticleMatrix);
-    //increment originPoint.y
-
     return;
   }
 
