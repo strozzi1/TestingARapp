@@ -177,16 +177,19 @@ function checkSupportedState() {
       });
     } else {
         var cubeMatrix = cube.matrixWorld
-        scene.add(modelObj);
+        scene.add(cube);
+        cube.position.setFromMatrixPosition(cubeMatrix);
+
         modelObj.scale.set(0.05, 0.05, 0.05);
-        modelObj.position.setFromMatrixPosition(cubeMatrix);
+        cube.add(modelObj);
+
         if (reticle){
           reticle.visible = false;
         }
 
         //Animation here
-        modelObj.rotation.y += 0.1;
-
+        cube.rotation.y += 0.1;
+        console.log(modelObj);
     }
 
     let xrLayer = xrSession.renderState.baseLayer;
