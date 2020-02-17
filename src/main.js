@@ -4,7 +4,7 @@ import {AmbientLight, AnimationMixer, Box3, CircleGeometry, Clock, CubeTextureLo
         Matrix4, Mesh, MeshBasicMaterial, Object3D, PerspectiveCamera,
         PCFSoftShadowMap, PlaneBufferGeometry, PlaneGeometry,
         PMREMGenerator, Raycaster, RingGeometry, Scene, ShadowMaterial,
-        sRGBEncoding, TextureLoader, Vector3, WebGLRenderer, BoxGeometry} from 'three';
+        sRGBEncoding, TextureLoader, Vector3, WebGLRenderer, BoxGeometry, PointLight} from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -38,7 +38,8 @@ var camera = new PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.
 camera.matrixAutoUpdate = false;
 scene.add(camera);
 
-
+var sunLight = new PointLight( 0xfffee8, 2, 0, 0);
+camera.add(sunLight);
 
 var renderer = new WebGLRenderer({antialias: true});
 renderer.autoClear = false; //needed?
@@ -194,7 +195,7 @@ function checkSupportedState() {
         }
 
         //Animation here
-        cube.rotation.y += 0.1;
+        modelObj.rotation.y += 0.1;
         console.log(modelObj);
         console.log(cube);
     }
