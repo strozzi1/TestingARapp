@@ -57,7 +57,7 @@ function init() {
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  originPoint = new Mesh( geometry, green);
+  originPoint = new Mesh( geometry, yellow);
 
 
   var loader = new GLTFLoader();
@@ -224,13 +224,15 @@ function touchSelectEvent() {
   if (showSolarSystem){
     //TODO Change this to a reset button when the solar system is in place
     showSolarSystem = false;
-    
+
+    //reset solar system (remove components from scene) or hide them by making hidden
+    scene.remove(originPoint);
+
     var reticleMatrix = reticle.matrixWorld;
     reticle.add(originPoint);
     originPoint.position.setFromMatrixPosition(reticleMatrix);
     //increment originPoint.y
 
-    //reset solar system (remove components from scene) or hide them by making hidden
 
   } else {
     showSolarSystem = true;
