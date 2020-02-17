@@ -54,7 +54,7 @@ function init() {
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  cube = new Mesh( geometry, green );
+  cube = new Mesh( geometry, yellow );
 
 
   var loader = new GLTFLoader();
@@ -133,6 +133,7 @@ function checkSupportedState() {
     }
   }
 
+
   function renderXR(timestamp, xrFrame){
 
     if (!xrFrame || !xrSession || !arActivated){
@@ -145,9 +146,6 @@ function checkSupportedState() {
       return;
     }
 
-    //TODO: solarRender() goes here? 2
-
-    //TODO: based upon a bool to see if our solar system is set or not
     if (!solarSystem){
       if (!reticle)
         createReticle();
@@ -179,6 +177,9 @@ function checkSupportedState() {
           reticle.visible = false;
         }
       });
+    } else {
+        cube.rotation.y += 0.1;
+
     }
 
     let xrLayer = xrSession.renderState.baseLayer;
@@ -201,47 +202,20 @@ function checkSupportedState() {
     camera.matrix.fromArray(viewMatrix).getInverse(camera.matrix);
     camera.updateMatrixWorld(true);
 
-    //TODO: solarRender() goes here? 1
-
     renderer.render(scene, camera)
   }
 
 function touchSelectEvent() {
 
   if (solarSystem){
+    //TODO have a reset button when the solar system is in place
     solarSystem = false;
   } else {
+
     solarSystem = true;
+    retical.visible = false;
   }
-
-  //TODO add function to get ray
-  // const x=0;
-  // const y=0;
-  // let raycaster = new Raycaster();
-  // raycaster.setFromCamera({ x, y }, camera);
-  //
-  // let rayOrigin = raycaster.ray.origin;
-  // let rayDirection = raycaster.ray.direction;
-  // let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
-  //   {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
-  //
-  // xrSession.requestHitTest(ray, xrRefSpace).then((results) => {
-  //   if (results.length) {
-  //     console.log("hit raycast good");
-  //     let hitResult = results[0];
-  //     let hitMatrix = new Matrix4();
-  //     hitMatrix.fromArray(hitResult.hitMatrix);
-  //
-  //     solarSystem = true;
-  //
-  //     //update position
-  //   } else {
-  //     console.log("No Go");
-  //   }
-  // };
 }
-
-
 
 
 function createReticle(){
