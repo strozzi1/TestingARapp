@@ -57,7 +57,7 @@ function init() {
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  originPoint = new Mesh( geometry, green );
+  originPoint = new Mesh( geometry, green);
 
 
   var loader = new GLTFLoader();
@@ -249,7 +249,7 @@ function createReticle(){
   if (reticle){
     var reticleMatrix = reticle.matrixWorld;
     reticle.add(originPoint);
-    originPoint.position.setFromMatrixPosition(reticalMatrix);
+    originPoint.position.setFromMatrixPosition(reticleMatrix);
     //increment originPoint.y
 
     return;
