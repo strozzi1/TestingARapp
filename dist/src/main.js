@@ -1,5 +1,5 @@
 import {Workbox} from 'workbox-window';
-import {AmbientLight, AnimationMixer, Box3, CircleGeometry, Clock, CubeTextureLoader,
+import {AmbientLight, AnimationMixer, Box3, CircleGeometry, Clock, originPointTextureLoader,
         DirectionalLight, DoubleSide, Euler, GammaEncoding, Math as ThreeMath,
         Matrix4, Mesh, MeshBasicMaterial, Object3D, PerspectiveCamera,
         PCFSoftShadowMap, PlaneBufferGeometry, PlaneGeometry,
@@ -15,9 +15,9 @@ if ("serviceWorker" in navigator) {
 }
 
 //variables
-var cube;
+var originPoint;
 var modelObj;
-var solarSystem = false;
+var showSolarSystem = false;
 
 let xrButton = document.getElementById('xr-button');
 let xrSession = null;
@@ -57,7 +57,7 @@ function init() {
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  cube = new Mesh( geometry, yellow );
+  originPoint = new Mesh( geometry, yellow );
 
 
   var loader = new GLTFLoader();
@@ -149,9 +149,10 @@ function checkSupportedState() {
       return;
     }
 
-    if (!solarSystem){
-      if (!reticle)
+    if (!showSolarSystem){
+      if (!reticle){
         createReticle();
+      }
 
       const x=0;
       const y=0;
@@ -171,24 +172,21 @@ function checkSupportedState() {
           let hitMatrix = new Matrix4();
           hitMatrix.fromArray(hitResult.hitMatrix);
           reticle.position.setFromMatrixPosition(hitMatrix);
-          //lookAtOnY(reticle, camera, null); //needed
 
         } else {
           console.log("Keep looking");
           reticle.visible = false;
         }
       });
+
     } else {
 
-        var cubeMatrix = cube.matrixWorld
-        scene.add(cube);
-        cube.position.setFromMatrixPosition(cubeMatrix);
-
-        //TODO: get proper scale for the earth
-        //TODO: need to add light
-        //NOTE: cube is the origin point for the solar system
+      //TODO move where parent is defined so its not in the render function. move to touch event
+        var originPointMatrix = originPoint.matrixWorld
+        scene.add(originPoint);
+        originPoint.position.setFromMatrixPosition(originPointMatrix);
         modelObj.scale.set(0.0005, 0.0005, 0.0005);
-        cube.add(modelObj);
+        originPoint.add(modelObj);
 
         if (reticle){
           reticle.visible = false;
@@ -196,8 +194,9 @@ function checkSupportedState() {
 
         //Animation here
         modelObj.rotation.y += 0.1;
-        console.log(modelObj);
-        console.log(cube);
+
+        // console.log(modelObj);
+        // console.log(originPoint);
     }
 
     let xrLayer = xrSession.renderState.baseLayer;
@@ -224,12 +223,13 @@ function checkSupportedState() {
   }
 
 function touchSelectEvent() {
-  if (solarSystem){
+  if (showSolarSystem){
     //TODO have a reset button when the solar system is in place
-    solarSystem = false;
+    showSolarSystem = false;
   } else {
-
-    solarSystem = true;
+    showSolarSystem = true;
+    console.log(reticle);
+    console.log(originPoint);
   }
 }
 
@@ -247,24 +247,12 @@ function createReticle(){
   let circle = new Mesh(ringGeometry, material);
   circle.position.y = 0.03;
 
-  cube.position.y = 0.2;
+  originPoint.position.y = 0.2;
 
   reticle.add(circle);
-  reticle.add(cube);
+  reticle.add(originPoint);
   reticle.name = 'reticle';
   scene.add(reticle)
 }
 
-  //Levels out the redical? NEEDED?
-  function lookAtOnY(looker, target, origin) {
-    const targetPos = new Vector3().setFromMatrixPosition(target.matrixWorld);
-
-    const angle = Math.atan2(targetPos.x - looker.position.x, targetPos.z - looker.position.z);
-    looker.rotation.set(0, angle, 0);
-    if (origin !== null) {
-      origin.applyEuler(new Euler(0, angle, 0));
-    }
-  }
-
-
-  init();
+init();
