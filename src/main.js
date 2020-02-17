@@ -176,13 +176,14 @@ function checkSupportedState() {
         }
       });
     } else {
+        var cubeMatrix = cube.matrixWorld
         scene.add(cube);
-        cube.position.setFromMatrixPosition(reticle.matrixWorld);
-        cube.position.y = 0.2;
+        cube.position.setFromMatrixPosition(cubeMatrix);
+        // cube.position.y = 0.2;
         if (reticle){
           reticle.visible = false;
         }
-        
+
         //Animation here
         cube.rotation.y += 0.1;
 
@@ -236,7 +237,6 @@ function createReticle(){
   let circle = new Mesh(ringGeometry, material);
   circle.position.y = 0.03;
 
-  //TODO: box to be atop retical
   cube.position.y = 0.2;
 
   reticle.add(circle);
