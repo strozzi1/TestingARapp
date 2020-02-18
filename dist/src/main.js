@@ -221,7 +221,7 @@ function touchSelectEvent() {
 
     //reset solar system (remove components from scene) or hide them by making hidden
 
-    var reticleMatrix = reticle.matrixWorld;
+    let reticleMatrix = reticle.matrixWorld;
     reticle.add(originPoint);
     //originPoint.position.setFromMatrixPosition(reticleMatrix);
     //originPoint.position.y = 0.2;
@@ -230,9 +230,10 @@ function touchSelectEvent() {
   } else {
     showSolarSystem = true;
 
-    var originPointMatrix = originPoint.matrixWorld;
+    let originPointMatrix = originPoint.matrixWorld;
+    originPoint.position.set(0, 0, 0);
     scene.add(originPoint);
-    originPoint.position.setFromMatrixPosition(originPointMatrix);
+    //originPoint.position.setFromMatrixPosition(originPointMatrix);
 
     //remove retical from scene or hide
 
