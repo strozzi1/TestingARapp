@@ -58,7 +58,7 @@ function init() {
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  originPoint = new Mesh( geometry, green);
+  originPoint = new Mesh( geometry, yellow);
 
 
   var loader = new GLTFLoader();
@@ -223,6 +223,7 @@ function touchSelectEvent() {
 
     let reticleMatrix = reticle.matrixWorld;
     reticle.add(originPoint);
+    originPoint.position.set(0, 0, 0);
     //originPoint.position.setFromMatrixPosition(reticleMatrix);
     //originPoint.position.y = 0.2;
 
@@ -231,9 +232,8 @@ function touchSelectEvent() {
     showSolarSystem = true;
 
     let originPointMatrix = originPoint.matrixWorld;
-    originPoint.position.set(0, 0, 0);
     scene.add(originPoint);
-    //originPoint.position.setFromMatrixPosition(originPointMatrix);
+    originPoint.position.setFromMatrixPosition(originPointMatrix);
 
     //remove retical from scene or hide
 
