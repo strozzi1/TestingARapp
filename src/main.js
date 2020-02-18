@@ -224,7 +224,7 @@ function touchSelectEvent() {
     var reticleMatrix = reticle.matrixWorld;
     reticle.add(originPoint);
     //originPoint.position.setFromMatrixPosition(reticleMatrix);
-    originPoint.position.y = 0.2;
+    //originPoint.position.y = 0.2;
 
 
   } else {
