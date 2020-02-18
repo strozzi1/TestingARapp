@@ -54,6 +54,7 @@ function init() {
 
   //Load in Models
   //TODO new function for adding models
+
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
@@ -151,7 +152,7 @@ function checkSupportedState() {
 
     if (!showSolarSystem){
       //if (!reticle){
-      createReticle();
+        createReticle();
       //}
 
       const x=0;
@@ -181,18 +182,11 @@ function checkSupportedState() {
 
     } else {
 
-      //TODO move where parent is defined so its not in the render function. move to touch event
-        // var originPointMatrix = originPoint.matrixWorld
-        // scene.add(originPoint);
-        // originPoint.position.setFromMatrixPosition(originPointMatrix);
-        // modelObj.scale.set(0.0005, 0.0005, 0.0005);
-        // originPoint.add(modelObj);
-
         if (reticle){
           reticle.visible = false;
         }
 
-        //Animation here
+        //TODO: Render Animations here
         //modelObj.rotation.y += 0.1;
 
     }
@@ -226,9 +220,8 @@ function touchSelectEvent() {
     showSolarSystem = false;
 
     //reset solar system (remove components from scene) or hide them by making hidden
-    scene.remove(originPoint);
 
-    //var reticleMatrix = reticle.matrixWorld;
+    var reticleMatrix = reticle.matrixWorld;
     reticle.add(originPoint);
     //originPoint.position.setFromMatrixPosition(reticleMatrix);
     originPoint.position.y = 0.2;
