@@ -58,7 +58,7 @@ function init() {
   var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  originPoint = new Mesh( geometry, yellow);
+  originPoint = new Mesh( geometry, green);
 
 
   var loader = new GLTFLoader();
@@ -220,12 +220,12 @@ function touchSelectEvent() {
     showSolarSystem = false;
 
     //reset solar system (remove components from scene) or hide them by making hidden
+    originPoint.remove(modelObj);
+    //modelObj.visible = hidden;
 
-    let reticleMatrix = reticle.matrixWorld;
     reticle.add(originPoint);
     originPoint.position.set(0, 0, 0);
-    //originPoint.position.setFromMatrixPosition(reticleMatrix);
-    //originPoint.position.y = 0.2;
+    originPoint.position.y = 0.3; //TODO could be fun to have a sit/stand mode to alter for different sizes and height
 
 
   } else {
@@ -238,8 +238,8 @@ function touchSelectEvent() {
     //remove retical from scene or hide
 
     //build solar system heiarchy or reviele
-    // modelObj.scale.set(0.0005, 0.0005, 0.0005);
-    // originPoint.add(modelObj);
+    modelObj.scale.set(0.0005, 0.0005, 0.0005);
+    originPoint.add(modelObj);
 
     console.log(reticle);
     console.log(originPoint);
@@ -260,7 +260,7 @@ function createReticle(){
   let circle = new Mesh(ringGeometry, material);
   circle.position.y = 0.03;
 
-  originPoint.position.y = 0.2;
+  originPoint.position.y = 0.3; //TODO could be fun to have a sit/stand mode to alter for different sizes and height
 
   reticle.add(circle);
   reticle.add(originPoint);
