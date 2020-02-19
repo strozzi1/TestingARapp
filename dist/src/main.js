@@ -40,7 +40,7 @@ var request = new XMLHttpRequest();
 /**********
 Create Renderer
 **********/
-var renderer = new WebGLRenderer({antialias: true});
+var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.autoClear = false;
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -54,7 +54,7 @@ Create Scene
 => Create Astronaut object
 => Create all pivots for objects in the scene
 **********/
-var scene = new Scene();
+var scene = new THREE.Scene();
 scene.background = null;
 
 sunObj = new THREE.Object3D();
@@ -72,7 +72,7 @@ for (var i=0; i < jsonObj.numPlanets; i++){
 Create Camera
 => Set starting point for camera
 **********/
-var camera = new PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 10000000);
+var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 10000000);
 camera.matrixAutoUpdate = false;
 scene.add(camera);
 
@@ -83,7 +83,7 @@ Create Lights
 // sunLight.position.set( 0, 0, 0);
 // scene.add(sunLight);
 
-var light = new PointLight( 0xfffee8, 2, 0, 0);
+var light = new THREE.PointLight( 0xfffee8, 2, 0, 0);
 camera.add(light);
 
 
@@ -91,12 +91,16 @@ camera.add(light);
 //Inital function that starts AR off. Establishes AR to button with eventlistener
 function init() {
 
-  var geometry = new SphereGeometry( 0.05, 0.05, 0.05 );
-  var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
-  var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  sunPreview = new Mesh( geometry, green);
 
-  originPoint = new Object3D();
+  //Load in Models
+  //TODO add new function for adding models
+
+  var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
+  var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
+  var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
+  sunPreview = new THREE.Mesh( geometry, green);
+
+  originPoint = new THREE.Object3D();
 
   /**********
   Load Models
@@ -362,7 +366,7 @@ function checkSupportedState() {
           let hitResult = results[0];
           reticle.visible = true;
           originPoint.visible = false;
-          let hitMatrix = new Matrix4();
+          let hitMatrix = new THREE.Matrix4();
           hitMatrix.fromArray(hitResult.hitMatrix);
           reticle.position.setFromMatrixPosition(hitMatrix);
 
@@ -437,12 +441,12 @@ function createReticle(){
     return;
   }
 
-  reticle = new Object3D();
+  reticle = new THREE.Object3D();
 
-  let ringGeometry = new RingGeometry(0.07, 0.09, 24, 1);
-  let material = new MeshBasicMaterial({ color: 0x34d2eb });
-  ringGeometry.applyMatrix(new Matrix4().makeRotationX(ThreeMath.degToRad(-90)));
-  let circle = new Mesh(ringGeometry, material);
+  let ringGeometry = new THREE.RingGeometry(0.07, 0.09, 24, 1);
+  let material = new THREE.MeshBasicMaterial({ color: 0x34d2eb });
+  ringGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(ThreeMath.degToRad(-90)));
+  let circle = new THREE.Mesh(ringGeometry, material);
   circle.position.y = 0.03;
 
   sunPreview.position.y = 0.3; //TODO could be fun to have a sit/stand mode to alter for different sizes and height
