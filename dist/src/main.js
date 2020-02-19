@@ -352,7 +352,7 @@ function checkSupportedState() {
 
       const x=0;
       const y=0;
-      let raycaster = new Raycaster();
+      let raycaster = new THREE.Raycaster();
       raycaster.setFromCamera({ x, y }, camera);
 
       let rayOrigin = raycaster.ray.origin;
