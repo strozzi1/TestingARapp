@@ -54,7 +54,7 @@ document.body.appendChild(renderer.domElement);
 function init() {
 
   //Load in Models
-  //TODO new function for adding models
+  //TODO add new function for adding models
 
   var geometry = new SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
