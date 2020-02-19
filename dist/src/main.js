@@ -79,6 +79,9 @@ function init() {
 function loadModel(gltf) {
   modelObj = gltf.scene;
   modelObj.name = 'model';
+
+  modelObj.scale.set(0.0005, 0.0005, 0.0005);
+  originPoint.add(modelObj);
   // scene.add(modelObj);
 }
 
@@ -169,6 +172,7 @@ function checkSupportedState() {
           console.log("raycast good");
           let hitResult = results[0];
           reticle.visible = true;
+          originPoint.visible = false;
           let hitMatrix = new Matrix4();
           hitMatrix.fromArray(hitResult.hitMatrix);
           reticle.position.setFromMatrixPosition(hitMatrix);
@@ -183,6 +187,7 @@ function checkSupportedState() {
 
         if (reticle){
           reticle.visible = false;
+          originPoint.visible = true;
         }
 
         //TODO: Render Animations here
@@ -220,7 +225,7 @@ function touchSelectEvent() {
 
     //reset solar system (remove components from scene) or hide them by making hidden
     //sunPreview.remove(originPoint);
-    originPoint.visible = false;
+
 
     // reticle.add(sunPreview);
     //sunPreview.position.set(0, 0, 0);
@@ -232,10 +237,7 @@ function touchSelectEvent() {
 
     let sunPreviewMatrix = sunPreview.matrixWorld;
     scene.add(originPoint);
-    sunPreview.position.setFromMatrixPosition(sunPreviewMatrix);
-    originPoint.visible = true;
-
-
+    originPoint.position.setFromMatrixPosition(sunPreviewMatrix);
 
   }
 }
@@ -261,9 +263,6 @@ function createReticle(){
   reticle.name = 'reticle';
   scene.add(reticle);
 
-  //establish solar system
-  modelObj.scale.set(0.0005, 0.0005, 0.0005);
-  originPoint.add(modelObj);
 }
 
 init();
