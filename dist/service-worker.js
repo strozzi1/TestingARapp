@@ -59,7 +59,7 @@ self.__precacheManifest = [
   },
   {
     "url": "solarSystem.json",
-    "revision": "bd055dcbb57a1bd3970d6a0e4bce8cfc"
+    "revision": "5b45ec97088b74ec2de3c89c0ccf3180"
   },
   {
     "url": "src/main.js",
