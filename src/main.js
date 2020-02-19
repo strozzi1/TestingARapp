@@ -91,6 +91,12 @@ camera.add(light);
 //Inital function that starts AR off. Establishes AR to button with eventlistener
 function init() {
 
+<<<<<<< HEAD
+=======
+  //Load in Models
+  //TODO add new function for adding models
+
+>>>>>>> eebd43f8e123f345e97ea6f2e206a2ee43345ee4
   var geometry = new SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
