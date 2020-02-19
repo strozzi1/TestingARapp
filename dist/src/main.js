@@ -1,10 +1,10 @@
 import {Workbox} from 'workbox-window';
-import {AmbientLight, AnimationMixer, Box3, CircleGeometry, Clock, originPointTextureLoader,
+import {AmbientLight, AnimationMixer, Box3, CircleGeometry, Clock, sunPreviewTextureLoader,
         DirectionalLight, DoubleSide, Euler, GammaEncoding, Math as ThreeMath,
         Matrix4, Mesh, MeshBasicMaterial, Object3D, PerspectiveCamera,
         PCFSoftShadowMap, PlaneBufferGeometry, PlaneGeometry,
         PMREMGenerator, Raycaster, RingGeometry, Scene, ShadowMaterial,
-        sRGBEncoding, TextureLoader, Vector3, WebGLRenderer, BoxGeometry, PointLight} from 'three';
+        sRGBEncoding, TextureLoader, Vector3, WebGLRenderer, SphereGeometry, PointLight} from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -15,6 +15,7 @@ if ("serviceWorker" in navigator) {
 }
 
 //variables
+var sunPreview;
 var originPoint;
 var modelObj;
 var showSolarSystem = false;
@@ -55,11 +56,12 @@ function init() {
   //Load in Models
   //TODO new function for adding models
 
-  var geometry = new BoxGeometry( 0.05, 0.05, 0.05 );
+  var geometry = new SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  originPoint = new Mesh( geometry, green);
+  sunPreview = new Mesh( geometry, green);
 
+  originPoint = new Object3D();
 
   var loader = new GLTFLoader();
   loader.load(
@@ -69,6 +71,8 @@ function init() {
     error => onError(error)
   );
 
+  modelObj.scale.set(0.0005, 0.0005, 0.0005);
+  originPoint.add(modelObj);
 
   if (navigator.xr) {
     checkSupportedState();
@@ -118,7 +122,6 @@ function checkSupportedState() {
       xrSession = await navigator.xr.requestSession('immersive-ar');
       xrRefSpace = await xrSession.requestReferenceSpace('local');
 
-
       xrSession.addEventListener('select', touchSelectEvent);
 
       let gl = renderer.getContext();
@@ -151,9 +154,8 @@ function checkSupportedState() {
     }
 
     if (!showSolarSystem){
-      //if (!reticle){
-        createReticle();
-      //}
+
+      createReticle();
 
       const x=0;
       const y=0;
@@ -187,7 +189,7 @@ function checkSupportedState() {
         }
 
         //TODO: Render Animations here
-        //modelObj.rotation.y += 0.1;
+        modelObj.rotation.y += 0.1;
 
     }
 
@@ -220,29 +222,24 @@ function touchSelectEvent() {
     showSolarSystem = false;
 
     //reset solar system (remove components from scene) or hide them by making hidden
-    originPoint.remove(modelObj);
-    //modelObj.visible = hidden;
+    //sunPreview.remove(originPoint);
+    originPoint.visible = false;
 
-    reticle.add(originPoint);
-    originPoint.position.set(0, 0, 0);
-    originPoint.position.y = 0.3; //TODO could be fun to have a sit/stand mode to alter for different sizes and height
+    // reticle.add(sunPreview);
+    //sunPreview.position.set(0, 0, 0);
+    //sunPreview.position.y = 0.3; //TODO could be fun to have a sit/stand mode to alter for different sizes and height
 
 
   } else {
     showSolarSystem = true;
 
-    let originPointMatrix = originPoint.matrixWorld;
+    let sunPreviewMatrix = sunPreview.matrixWorld;
     scene.add(originPoint);
-    originPoint.position.setFromMatrixPosition(originPointMatrix);
+    sunPreview.position.setFromMatrixPosition(sunPreviewMatrix);
+    originPoint.visible = true;
 
-    //remove retical from scene or hide
 
-    //build solar system heiarchy or reviele
-    modelObj.scale.set(0.0005, 0.0005, 0.0005);
-    originPoint.add(modelObj);
 
-    console.log(reticle);
-    console.log(originPoint);
   }
 }
 
@@ -260,10 +257,10 @@ function createReticle(){
   let circle = new Mesh(ringGeometry, material);
   circle.position.y = 0.03;
 
-  originPoint.position.y = 0.3; //TODO could be fun to have a sit/stand mode to alter for different sizes and height
+  sunPreview.position.y = 0.3; //TODO could be fun to have a sit/stand mode to alter for different sizes and height
 
   reticle.add(circle);
-  reticle.add(originPoint);
+  reticle.add(sunPreview);
   reticle.name = 'reticle';
   scene.add(reticle)
 }
