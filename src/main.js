@@ -71,9 +71,6 @@ function init() {
     error => onError(error)
   );
 
-  modelObj.scale.set(0.0005, 0.0005, 0.0005);
-  originPoint.add(modelObj);
-
   if (navigator.xr) {
     checkSupportedState();
   }
@@ -262,7 +259,11 @@ function createReticle(){
   reticle.add(circle);
   reticle.add(sunPreview);
   reticle.name = 'reticle';
-  scene.add(reticle)
+  scene.add(reticle);
+
+  //establish solar system
+  modelObj.scale.set(0.0005, 0.0005, 0.0005);
+  originPoint.add(modelObj);
 }
 
 init();
