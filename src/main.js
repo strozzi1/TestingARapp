@@ -1,12 +1,7 @@
 import {Workbox} from 'workbox-window';
-import {AmbientLight, AnimationMixer, Box3, CircleGeometry, Clock, sunPreviewTextureLoader,
-        DirectionalLight, DoubleSide, Euler, GammaEncoding, Math as ThreeMath,
-        Matrix4, Mesh, MeshBasicMaterial, Object3D, PerspectiveCamera,
-        PCFSoftShadowMap, PlaneBufferGeometry, PlaneGeometry,
-        PMREMGenerator, Raycaster, RingGeometry, Scene, ShadowMaterial,
-        sRGBEncoding, TextureLoader, Vector3, WebGLRenderer, SphereGeometry, PointLight} from 'three';
+import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 //Service Worker
 if ("serviceWorker" in navigator) {
@@ -17,44 +12,84 @@ if ("serviceWorker" in navigator) {
 //variables
 var sunPreview;
 var originPoint;
-var modelObj;
-var showSolarSystem = false;
+var planets = [];
+var pivots = [];
+var sunObj, moonObj, moonPivot;
 
 let xrButton = document.getElementById('xr-button');
 let xrSession = null;
 let xrRefSpace = null;
-
+var showSolarSystem = false;
 var arActivated = false;
 var reticle;
-// WebGL scene globals.
 let gl = null;
 
 
-//Scene amd Camera
-var scene = new Scene();
-scene.background = null;
+/**********
+Load up JSON file
+***********
+=> This file contains all relevent information concerning all the objects in the scene
+**********/
+var jsonObj;
+var request = new XMLHttpRequest();
+  request.open("GET", "./solarSystem.json", false);
+  request.send(null);
+  jsonObj = JSON.parse(request.responseText);
 
-//var camera = new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 1, 100000);
-var camera = new PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 10000000);
-camera.matrixAutoUpdate = false;
-scene.add(camera);
 
-var sunLight = new PointLight( 0xfffee8, 2, 0, 0);
-camera.add(sunLight);
-
+/**********
+Create Renderer
+**********/
 var renderer = new WebGLRenderer({antialias: true});
-renderer.autoClear = false; //needed?
-
-//Renderer
+renderer.autoClear = false;
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 
+/**********
+Create Scene
+***********
+=> Create the scene
+=> Create Sun object
+=> Create Astronaut object
+=> Create all pivots for objects in the scene
+**********/
+var scene = new Scene();
+scene.background = null;
+
+sunObj = new THREE.Object3D();
+moonObj = new THREE.Object3D();
+moonPivot = new THREE.Object3D();
+
+for (var i=0; i < jsonObj.numPlanets; i++){
+  pivots[i] = new THREE.Object3D();
+  pivots[i].position.set(0, 0, 0);
+  scene.add(pivots[i]);
+}
+
+
+/**********
+Create Camera
+=> Set starting point for camera
+**********/
+var camera = new PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 10000000);
+camera.matrixAutoUpdate = false;
+scene.add(camera);
+
+/**********
+Create Lights
+**********/
+// var sunLight = new THREE.PointLight( 0xfffee8, jsonObj.sun.intensity, 0, 0);
+// sunLight.position.set( 0, 0, 0);
+// scene.add(sunLight);
+
+var light = new PointLight( 0xfffee8, 2, 0, 0);
+camera.add(light);
+
+
+
 //Inital function that starts AR off. Establishes AR to button with eventlistener
 function init() {
-
-  //Load in Models
-  //TODO add new function for adding models
 
   var geometry = new SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new MeshBasicMaterial( {color: 0x00ff00} ); //Green
@@ -63,27 +98,180 @@ function init() {
 
   originPoint = new Object3D();
 
+  /**********
+  Load Models
+  => Use the GLTFLoader to load all nessisary models and set the models to appropriate objects
+  **********/
   var loader = new GLTFLoader();
+
+  //Sun
   loader.load(
-    'models/Earth.glb',
-    gltf => loadModel (gltf),
+    jsonObj.sun.file,
+    gltf => loadSun( gltf ),
     xhr => onProgress(xhr),
     error => onError(error)
   );
+
+  // //Planets
+  // //NOTE: Loads planets in the wrong order
+  // for (var i=0; i < jsonObj.numPlanets; i++){
+  //   loader.load(
+  //     jsonObj.planets[i].file,
+  //     gltf => loadPlanet( gltf ),
+  //     xhr => onProgress(xhr),
+  //     error => onError(error)
+  //   );
+  // }
+  // var num;
+  //
+  // //Earths Moon
+  // loader.load(
+  //   jsonObj.planets[2].moon.file,
+  //   gltf => loadMoon( gltf ),
+  //   xhr => onProgress(xhr),
+  //   error => onError(error)
+  // );
+
 
   if (navigator.xr) {
     checkSupportedState();
   }
 }
 
-function loadModel(gltf) {
-  modelObj = gltf.scene;
-  modelObj.name = 'model';
+/**********
+Load Model Functions
+***********
+=> These functions are called when the model is first loaded
+=> Sun:
+  => Set scale based on Json values
+  => Set Y axis angle based on Json value
+  => add to scene (Note: will be position to (0,0,0))
 
-  modelObj.scale.set(0.0005, 0.0005, 0.0005);
-  originPoint.add(modelObj);
-  // scene.add(modelObj);
-}
+=> Planets:
+  => Uses switch statement to determin which planet is loading in at this time (Note: planets dont load in order)
+  => Set scale and position based on Json values
+  => Set Y axis angle based on Json value
+  => Set planets parent to proper pivot object (Pivot is already set to scene, and set to (0, 0, 0))
+  => Set Y axis of the pivot to the orbit inclination value in the json
+  => Create orbit rings and set Y axis of orbit ring based on the orbit inclination
+  => Add to scene(Note: will be set to (0, 0, 0))
+
+=> Moon:
+  => Set moonPivot to the location of the Earth (uses the same values from the Json)
+  => Set the scale and position of the moon based on json values
+  => Set hierarchy as Earth > moonPivot > moonObj
+  => Set Y axis of the pivot and the moon obj based on the json values
+
+=> Note: Each Planet, Sun, and Moon begins with a scale of 1, equivalent to (1000, 1000, 1000)
+**********/
+
+//Load Sun Model
+var loadSun = ( gltf ) => {
+  sunObj = gltf.scene;
+  //TODO: remove /10, Maybe?
+  sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
+                    jsonObj.sun.radius/jsonObj.sizeScale/10,
+                    jsonObj.sun.radius/jsonObj.sizeScale/10);
+  sunObj.rotateZ(jsonObj.sun.rotationAngle);
+  sunObj.name = jsonObj.sun.name;
+  originPoint.add(sunObj);
+};
+
+//Load Planet Models
+var loadPlanet = ( gltf ) => {
+
+  //Order Planets
+  switch (gltf.parser.options.path){
+    case "./model/planets-glb/mercury/":
+      num = 0;
+      break;
+    case "./model/planets-glb/venus/":
+      num = 1;
+      break;
+    case "./model/planets-glb/earth/":
+      num = 2;
+      break;
+    case "./model/planets-glb/mars/":
+      num = 3;
+      break;
+    case "./model/planets-glb/jupiter/":
+      num = 4;
+      break;
+    case "./model/planets-glb/saturn/":
+      num = 5;
+      break;
+    case "./model/planets-glb/uranus/":
+      num = 6;
+      break;
+    case "./model/planets-glb/neptune/":
+      num = 7;
+      break;
+    case "./model/planets-glb/pluto/":
+      num = 8;
+      break;
+    default:
+      break;
+  }
+
+  //Planet
+  //Note: Scale is 1=1000 based on original model
+  planets[num] = gltf.scene
+  planets[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
+                          (jsonObj.planets[num].radius/jsonObj.sizeScale),
+                          (jsonObj.planets[num].radius/jsonObj.sizeScale));
+  planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale,
+                            pivots[num].position.y,
+                            pivots[num].position.z);
+
+  planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
+  planets[num].name = jsonObj.planets[num].name;
+
+  //Planet Target
+  // planetTargets[num].position.set(planets[num].position.x - (jsonObj.planets[num].radius)*1500 / jsonObj.sizeScale,
+  //                           planets[num].position.y,
+  //                           planets[num].position.z);
+
+  //Pivot
+  pivots[num].add(planets[num]);
+  pivots[num].add(planetTargets[num]);
+  pivots[num].rotateZ(jsonObj.planets[num].orbitInclination);
+
+  //Draw Orbit Lines
+  // var material = new THREE.LineBasicMaterial({ color:0xffffa1 });
+  // var orbitCircle = new THREE.CircleGeometry(jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale, 100);
+  // orbitCircle.vertices.shift();
+  // orbitCircle.rotateX(Math.PI * 0.5);
+  // orbitCircle.rotateZ(jsonObj.planets[num].orbitInclination);
+  //
+  // orbitLines[num] = new THREE.LineLoop( orbitCircle, material);
+  // scene.add(orbitLines[num]);
+};
+
+//Load Moon Model
+var loadMoon = ( gltf ) => {
+  moonObj = gltf.scene;
+
+  moonPivot.position.set( jsonObj.planets[2].distanceFromSun/jsonObj.distanceScale,
+                          moonPivot.position.y,
+                          moonPivot.position.z);
+
+  moonObj.scale.set(jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
+                    jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
+                    jsonObj.planets[2].moon.radius/jsonObj.sizeScale);
+
+  moonObj.position.set( //jsonObj.planets[2].radius/jsonObj.sizeScale + jsonObj.planets[2].moon.distanceFromEarth/jsonObj.distanceScale,
+                        5,
+                        moonPivot.position.y,
+                        moonPivot.position.z);
+
+  moonObj.rotateZ(jsonObj.planets[2].moon.rotationAngle);
+  moonObj.name = jsonObj.planets[2].moon.name;
+
+  pivots[2].add(moonPivot);
+  moonPivot.add(moonObj);
+
+  moonPivot.rotateZ(jsonObj.planets[2].moon.orbitInclination);
+};
 
 function onProgress(xhr) {
   // console.log((xhr.loaded / xhr.total *100) + '% loaded');
@@ -92,6 +280,7 @@ function onProgress(xhr) {
 function onError(error) {
   console.log(error);
 }
+
 
 //Check if AR is supported on the device
 function checkSupportedState() {
@@ -191,7 +380,7 @@ function checkSupportedState() {
         }
 
         //TODO: Render Animations here
-        modelObj.rotation.y += 0.1;
+        //modelObj.rotation.y += 0.1;
 
     }
 

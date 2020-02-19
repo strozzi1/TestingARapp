@@ -22,7 +22,9 @@ export default {
     copy([
       { files: 'style.css', dest: 'dist' },
       { files: 'src/*.js', dest: 'dist/src/'},
-      { files: 'models/*.glb', dest: 'dist/models/' },
+      { files: 'model/planets-glb/**/*.glb', dest: 'dist/model/planets-glb/'},
+      { files: 'model/Sun.glb', dest: 'dist/model/'},
+      { files: 'solarSystem.json', dest: 'dist' },
     ], { verbose: false, watch: false }),
     ...config.plugins,
       workbox({
