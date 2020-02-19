@@ -432,6 +432,9 @@ function touchSelectEvent() {
     scene.add(originPoint);
     originPoint.position.setFromMatrixPosition(sunPreviewMatrix);
 
+    console.log(originPoint.position);
+    console.log(sunObj);
+
   }
 }
 
