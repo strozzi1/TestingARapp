@@ -445,7 +445,7 @@ function createReticle(){
 
   let ringGeometry = new THREE.RingGeometry(0.07, 0.09, 24, 1);
   let material = new THREE.MeshBasicMaterial({ color: 0x34d2eb });
-  ringGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(ThreeMath.degToRad(-90)));
+  ringGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(-90)));
   let circle = new THREE.Mesh(ringGeometry, material);
   circle.position.y = 0.03;
 
