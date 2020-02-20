@@ -9,6 +9,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
    "distanceScale":1000000000,
    "orbitScale": 1,
 =======
@@ -34,6 +35,9 @@
 =======
    "distanceScale":1000000000,
 >>>>>>> 8802d1d... planets
+=======
+   "distanceScale":2000000000,
+>>>>>>> 8590380... planets
    "orbitScale": 10,
 >>>>>>> 8fa9ed9... adding in the planets
    "rotationScale": 10,
