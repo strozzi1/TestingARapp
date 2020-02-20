@@ -28,6 +28,7 @@ self.__precacheManifest = [
   {
     "url": "index.html",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "revision": "b6c097ab00c08ef2b2639c5a15ed5970"
   },
   {
@@ -40,6 +41,13 @@ self.__precacheManifest = [
     "url": "main-2b6b38e3.js",
     "revision": "9cdb35a9da159e491bcadf031d0a4312"
 >>>>>>> 8fa9ed9... adding in the planets
+=======
+    "revision": "ef23a6f817f0b01d8af443beba91a972"
+  },
+  {
+    "url": "main-5507036c.js",
+    "revision": "e4c8171e50eeb3fdea9b5be2aec43e69"
+>>>>>>> a830ba2... Planets
   },
   {
     "url": "model/planets-glb/neptune/Neptune.glb",
@@ -78,8 +86,12 @@ self.__precacheManifest = [
   },
   {
     "url": "src/main.js",
+<<<<<<< HEAD
     "revision": "0177d9bb59816c53e5cf71f8f76f7b8d"
 >>>>>>> 8fa9ed9... adding in the planets
+=======
+    "revision": "b6b89bc8142821afdb90df001701eed4"
+>>>>>>> a830ba2... Planets
   },
   {
     "url": "src/solar.js",

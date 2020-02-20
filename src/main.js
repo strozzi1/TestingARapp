@@ -130,6 +130,7 @@ function init() {
     );
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
   //Earths Moon
   loader.load(
@@ -140,6 +141,8 @@ function init() {
   );
 =======
   var num;
+=======
+>>>>>>> a830ba2... Planets
 
   // //Earths Moon
   // loader.load(
