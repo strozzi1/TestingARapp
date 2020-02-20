@@ -136,6 +136,7 @@ self.__precacheManifest = [
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "revision": "401aeab9a8292605a3a6861b584a0cd2"
   },
   {
@@ -187,6 +188,9 @@ self.__precacheManifest = [
 >>>>>>> 929cd43... planets
 =======
     "revision": "e813619183416fa4491cc186e2d68828"
+=======
+    "revision": "2dd6045873387189717143c0dfb117d0"
+>>>>>>> fea5379... push
   },
   {
     "url": "src/main.js",
