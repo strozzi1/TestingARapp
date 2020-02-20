@@ -32,6 +32,7 @@ self.__precacheManifest = [
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "revision": "b6c097ab00c08ef2b2639c5a15ed5970"
   },
   {
@@ -72,6 +73,13 @@ self.__precacheManifest = [
     "url": "main-76c8c870.js",
     "revision": "114025ed4fd3bac5d5a8cbf2b59e0afc"
 >>>>>>> 4ec9dc3... planets
+=======
+    "revision": "c39f3eeb52170469c1c99bfcfede66e1"
+  },
+  {
+    "url": "main-f0155b4e.js",
+    "revision": "91b36869ed9673e2400cf59106d2c023"
+>>>>>>> 0df0f16... planets
   },
   {
     "url": "polyfills/custom-elements-es5-adapter.84b300ee818dce8b351c7cc7c100bcf7.js",
@@ -87,6 +95,7 @@ self.__precacheManifest = [
   },
   {
     "url": "src/main.js",
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -108,6 +117,9 @@ self.__precacheManifest = [
 =======
     "revision": "68510b830d24d03ba41dfd26c2e39594"
 >>>>>>> 4ec9dc3... planets
+=======
+    "revision": "bd938cc92122c5e20834d15c7c295578"
+>>>>>>> 0df0f16... planets
   },
   {
     "url": "src/solar.js",

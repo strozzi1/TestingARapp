@@ -3,6 +3,7 @@
    "sizeScale":1000000000,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
    "distanceScale":1000000000,
    "orbitScale": 1,
 =======
@@ -10,6 +11,9 @@
 =======
    "distanceScale":10000000,
 >>>>>>> f5616c4... planets
+=======
+   "distanceScale":100000,
+>>>>>>> 0df0f16... planets
    "orbitScale": 10,
 >>>>>>> 8fa9ed9... adding in the planets
    "rotationScale": 10,

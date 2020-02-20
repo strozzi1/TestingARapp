@@ -101,7 +101,7 @@ function init() {
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  sunPreview = new THREE.Mesh( geometry, green);
+  sunPreview = new THREE.Mesh( geometry, yellow);
 
   originPoint = new THREE.Object3D();
 
@@ -259,8 +259,6 @@ var loadPlanet = ( gltf ) => {
   // planetTargets[num].position.set(planets[num].position.x - (jsonObj.planets[num].radius)*1500 / jsonObj.sizeScale,
   //                           planets[num].position.y,
   //                           planets[num].position.z);
-
-  console.log(planets[num]);
 
   //Pivot
   pivots[num].add(planets[num]);
