@@ -290,6 +290,8 @@ var loadPlanet = ( gltf ) => {
 
   orbitLines[num] = new THREE.LineLoop( orbitCircle, orbitMaterial);
   originPoint.add(orbitLines[num]);
+
+  console.log("test");
 };
 
 //Load Moon Model
