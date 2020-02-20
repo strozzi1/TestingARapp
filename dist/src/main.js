@@ -173,7 +173,7 @@ Load Model Functions
 var loadSun = ( gltf ) => {
   sunObj = gltf.scene;
   //TODO: remove /10, Maybe?
-  sunObj.scale.set( 0.0005, 0.0005, 0.0005);
+  sunObj.scale.set( 0.0000695510, 0.0000695510, 0.0000695510);
     // jsonObj.sun.radius/jsonObj.sizeScale/10,
     //                 jsonObj.sun.radius/jsonObj.sizeScale/10,
     //                 jsonObj.sun.radius/jsonObj.sizeScale/10);
