@@ -2,7 +2,11 @@
    "numPlanets":9,
    "sizeScale":1000000000,
    "distanceScale":1000000000,
+<<<<<<< HEAD
    "orbitScale": 1,
+=======
+   "orbitScale": 10,
+>>>>>>> 4cf2edc... planets
    "rotationScale": 10,
    "showPlanetLines":true,
    "traversal":false,
