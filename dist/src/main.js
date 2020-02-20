@@ -101,7 +101,7 @@ function init() {
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  sunPreview = new THREE.Mesh( geometry, yellow);
+  sunPreview = new THREE.Mesh( geometry, green);
 
   originPoint = new THREE.Object3D();
 
@@ -277,7 +277,7 @@ var loadPlanet = ( gltf ) => {
   //Draw Orbit Lines
   let orbitMaterial = new THREE.LineBasicMaterial({ color:0xffffa1 });
   let orbitCircle = new THREE.CircleGeometry(//jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale, 100);
-                                              0.0005, 100);
+                                              0.1, 100);
   orbitCircle.vertices.shift();
   orbitCircle.rotateX(Math.PI * 0.5);
   orbitCircle.rotateZ(jsonObj.planets[num].orbitInclination);
