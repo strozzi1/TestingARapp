@@ -62,11 +62,6 @@ sunObj = new THREE.Object3D();
 moonObj = new THREE.Object3D();
 moonPivot = new THREE.Object3D();
 
-// for (var i=0; i < jsonObj.numPlanets; i++){
-//   pivots[i] = new THREE.Object3D();
-//   originPoint.add(pivots[i]);
-// }
-
 
 /**********
 Create Camera
@@ -98,7 +93,7 @@ function init() {
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  sunPreview = new THREE.Mesh( geometry, green);
+  sunPreview = new THREE.Mesh( geometry, yellow);
 
   originPoint = new THREE.Object3D();
 
@@ -127,13 +122,13 @@ function init() {
     );
   }
 
-  // //Earths Moon
-  // loader.load(
-  //   jsonObj.planets[2].moon.file,
-  //   gltf => loadMoon( gltf ),
-  //   xhr => onProgress(xhr),
-  //   error => onError(error)
-  // );
+  //Earths Moon
+  loader.load(
+    jsonObj.planets[2].moon.file,
+    gltf => loadMoon( gltf ),
+    xhr => onProgress(xhr),
+    error => onError(error)
+  );
 
 
   if (navigator.xr) {
@@ -230,7 +225,7 @@ var loadPlanet = ( gltf ) => {
                             pivots[num].position.y,
                             pivots[num].position.z);
 
-  // planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
+  planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
   planets[num].name = jsonObj.planets[num].name;
 
   //Planet Target
@@ -240,6 +235,9 @@ var loadPlanet = ( gltf ) => {
 
   //Pivot
   pivots[num].add(planets[num]);
+
+  console.log(planets[num]);
+
   //pivots[num].add(planetTargets[num]);
   pivots[num].rotateZ(jsonObj.planets[num].orbitInclination);
 
@@ -266,8 +264,7 @@ var loadMoon = ( gltf ) => {
                     jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
                     jsonObj.planets[2].moon.radius/jsonObj.sizeScale);
 
-  moonObj.position.set( //jsonObj.planets[2].radius/jsonObj.sizeScale + jsonObj.planets[2].moon.distanceFromEarth/jsonObj.distanceScale,
-                        5,
+  moonObj.position.set( jsonObj.planets[2].radius/jsonObj.sizeScale + jsonObj.planets[2].moon.distanceFromEarth/jsonObj.distanceScale,
                         moonPivot.position.y,
                         moonPivot.position.z);
 
@@ -387,7 +384,34 @@ function checkSupportedState() {
         }
 
         //TODO: Render Animations here
-        //modelObj.rotation.y += 0.1;
+        //Sun Rotation
+        if (sunObj){
+          sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
+        }
+
+        //Planet Rotation (rad/day)
+        for (var i=0; i<jsonObj.numPlanets; i++){
+          if (planets[i]){
+              planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
+          }
+        }
+
+        // //Planet Orbit (rad/day)
+        for (var i=0; i<jsonObj.numPlanets; i++){ //will use jsonObj.numElements
+          if (pivots[i]){
+            pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
+          }
+        }
+
+        //Moon Rotation (rad/day)
+        if (moonObj){
+          moonObj.rotateY(jsonObj.planets[2].moon.rotation / jsonObj.rotationScale);
+        }
+
+        //Moon Orbit (rad/day)
+        if (moonPivot){
+          moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
+        }
 
     }
 
