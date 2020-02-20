@@ -2,6 +2,7 @@
    "numPlanets":9,
    "sizeScale":1000000000,
 <<<<<<< HEAD
+<<<<<<< HEAD
    "distanceScale":1000000000,
 <<<<<<< HEAD
    "orbitScale": 1,
@@ -9,6 +10,9 @@
 =======
    "distanceScale":2000000000,
 >>>>>>> 8590380... planets
+=======
+   "distanceScale":2000000000,
+>>>>>>> bc28601... planets
    "orbitScale": 10,
 >>>>>>> 4cf2edc... planets
    "rotationScale": 10,
