@@ -101,7 +101,7 @@ function init() {
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  sunPreview = new THREE.Mesh( geometry, green);
+  sunPreview = new THREE.Mesh( geometry, yellow);
 
   originPoint = new THREE.Object3D();
 
@@ -194,9 +194,12 @@ var loadSun = ( gltf ) => {
                     jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     //0.0000695510, 0.0000695510, 0.0000695510);
 >>>>>>> 8fa9ed9... adding in the planets
+=======
+>>>>>>> 929cd43... planets
   sunObj.rotateZ(jsonObj.sun.rotationAngle);
   sunObj.name = jsonObj.sun.name;
   originPoint.add(sunObj);
