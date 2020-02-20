@@ -248,9 +248,9 @@ var loadPlanet = ( gltf ) => {
   planets[num].scale.set((jsonObj.planets[num].radius/jsonObj.sizeScale),
                           (jsonObj.planets[num].radius/jsonObj.sizeScale),
                           (jsonObj.planets[num].radius/jsonObj.sizeScale));
-  // planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale,
-  //                           pivots[num].position.y,
-  //                           pivots[num].position.z);
+  planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale,
+                            pivots[num].position.y,
+                            pivots[num].position.z);
 
   // planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
   planets[num].name = jsonObj.planets[num].name;
@@ -263,9 +263,6 @@ var loadPlanet = ( gltf ) => {
   console.log(planets[num]);
 
   //Pivot
-  pivots[num] = new THREE.Object3D();
-  originPoint.add(pivots[num]);
-
   pivots[num].add(planets[num]);
 <<<<<<< HEAD
 

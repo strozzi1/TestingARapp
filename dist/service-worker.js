@@ -31,6 +31,7 @@ self.__precacheManifest = [
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "revision": "b6c097ab00c08ef2b2639c5a15ed5970"
   },
   {
@@ -64,6 +65,13 @@ self.__precacheManifest = [
     "url": "main-c2ac4990.js",
     "revision": "50c68e234d0f68004e2bbddfe67fdb42"
 >>>>>>> f5616c4... planets
+=======
+    "revision": "dd92f461c3c75a181b3077abc2e3540d"
+  },
+  {
+    "url": "main-76c8c870.js",
+    "revision": "114025ed4fd3bac5d5a8cbf2b59e0afc"
+>>>>>>> 4ec9dc3... planets
   },
   {
     "url": "model/planets-glb/neptune/Neptune.glb",
@@ -118,8 +126,12 @@ self.__precacheManifest = [
   },
   {
     "url": "src/main.js",
+<<<<<<< HEAD
     "revision": "1b15900a22e16b9a43e2fa6bdbf354d7"
 >>>>>>> f5616c4... planets
+=======
+    "revision": "68510b830d24d03ba41dfd26c2e39594"
+>>>>>>> 4ec9dc3... planets
   },
   {
     "url": "src/solar.js",
