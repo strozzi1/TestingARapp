@@ -98,7 +98,7 @@ function init() {
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  sunPreview = new THREE.Mesh( geometry, yellow);
+  sunPreview = new THREE.Mesh( geometry, green);
 
   originPoint = new THREE.Object3D();
 
@@ -173,9 +173,10 @@ Load Model Functions
 var loadSun = ( gltf ) => {
   sunObj = gltf.scene;
   //TODO: remove /10, Maybe?
-  sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
-                    jsonObj.sun.radius/jsonObj.sizeScale/10,
-                    jsonObj.sun.radius/jsonObj.sizeScale/10);
+  sunObj.scale.set( 0.005, 0.005, 0.005);
+    // jsonObj.sun.radius/jsonObj.sizeScale/10,
+    //                 jsonObj.sun.radius/jsonObj.sizeScale/10,
+    //                 jsonObj.sun.radius/jsonObj.sizeScale/10);
   sunObj.rotateZ(jsonObj.sun.rotationAngle);
   sunObj.name = jsonObj.sun.name;
   originPoint.add(sunObj);
