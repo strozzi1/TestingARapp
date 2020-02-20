@@ -14,6 +14,7 @@ var sunPreview;
 var originPoint;
 var planets = [];
 var pivots = [];
+var orbitLines = [];
 var sunObj, moonObj, moonPivot;
 
 let xrButton = document.getElementById('xr-button');
@@ -61,11 +62,10 @@ sunObj = new THREE.Object3D();
 moonObj = new THREE.Object3D();
 moonPivot = new THREE.Object3D();
 
-for (var i=0; i < jsonObj.numPlanets; i++){
-  pivots[i] = new THREE.Object3D();
-  pivots[i].position.set(0, 0, 0);
-  scene.add(pivots[i]);
-}
+// for (var i=0; i < jsonObj.numPlanets; i++){
+//   pivots[i] = new THREE.Object3D();
+//   originPoint.add(pivots[i]);
+// }
 
 
 /**********
@@ -116,18 +116,17 @@ function init() {
     error => onError(error)
   );
 
-  // //Planets
-  // //NOTE: Loads planets in the wrong order
-  // for (var i=0; i < jsonObj.numPlanets; i++){
-  //   loader.load(
-  //     jsonObj.planets[i].file,
-  //     gltf => loadPlanet( gltf ),
-  //     xhr => onProgress(xhr),
-  //     error => onError(error)
-  //   );
-  // }
-  // var num;
-  //
+  //Planets
+  //NOTE: Loads planets in the wrong order
+  for (var i=0; i < jsonObj.numPlanets; i++){
+    loader.load(
+      jsonObj.planets[i].file,
+      gltf => loadPlanet( gltf ),
+      xhr => onProgress(xhr),
+      error => onError(error)
+    );
+  }
+
   // //Earths Moon
   // loader.load(
   //   jsonObj.planets[2].moon.file,
@@ -173,10 +172,9 @@ Load Model Functions
 var loadSun = ( gltf ) => {
   sunObj = gltf.scene;
   //TODO: remove /10, Maybe?
-  sunObj.scale.set( 0.0000695510, 0.0000695510, 0.0000695510);
-    // jsonObj.sun.radius/jsonObj.sizeScale/10,
-    //                 jsonObj.sun.radius/jsonObj.sizeScale/10,
-    //                 jsonObj.sun.radius/jsonObj.sizeScale/10);
+  sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
+                    jsonObj.sun.radius/jsonObj.sizeScale/10,
+                    jsonObj.sun.radius/jsonObj.sizeScale/10);
   sunObj.rotateZ(jsonObj.sun.rotationAngle);
   sunObj.name = jsonObj.sun.name;
   originPoint.add(sunObj);
@@ -184,6 +182,7 @@ var loadSun = ( gltf ) => {
 
 //Load Planet Models
 var loadPlanet = ( gltf ) => {
+  let num;
 
   //Order Planets
   switch (gltf.parser.options.path){
@@ -218,6 +217,9 @@ var loadPlanet = ( gltf ) => {
       break;
   }
 
+  pivots[num] = new THREE.Object3D();
+  originPoint.add(pivots[num]);
+
   //Planet
   //Note: Scale is 1=1000 based on original model
   planets[num] = gltf.scene
@@ -228,7 +230,7 @@ var loadPlanet = ( gltf ) => {
                             pivots[num].position.y,
                             pivots[num].position.z);
 
-  planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
+  // planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
   planets[num].name = jsonObj.planets[num].name;
 
   //Planet Target
@@ -238,18 +240,18 @@ var loadPlanet = ( gltf ) => {
 
   //Pivot
   pivots[num].add(planets[num]);
-  pivots[num].add(planetTargets[num]);
+  //pivots[num].add(planetTargets[num]);
   pivots[num].rotateZ(jsonObj.planets[num].orbitInclination);
 
   //Draw Orbit Lines
-  // var material = new THREE.LineBasicMaterial({ color:0xffffa1 });
-  // var orbitCircle = new THREE.CircleGeometry(jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale, 100);
-  // orbitCircle.vertices.shift();
-  // orbitCircle.rotateX(Math.PI * 0.5);
-  // orbitCircle.rotateZ(jsonObj.planets[num].orbitInclination);
-  //
-  // orbitLines[num] = new THREE.LineLoop( orbitCircle, material);
-  // scene.add(orbitLines[num]);
+  let orbitMaterial = new THREE.LineBasicMaterial({ color:0xffffa1 });
+  let orbitCircle = new THREE.CircleGeometry(jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale, 100);
+  orbitCircle.vertices.shift();
+  orbitCircle.rotateX(Math.PI * 0.5);
+  orbitCircle.rotateZ(jsonObj.planets[num].orbitInclination);
+
+  orbitLines[num] = new THREE.LineLoop( orbitCircle, orbitMaterial);
+  originPoint.add(orbitLines[num]);
 };
 
 //Load Moon Model
@@ -417,15 +419,6 @@ function touchSelectEvent() {
     //TODO Change this to a reset button when the solar system is in place
     showSolarSystem = false;
 
-    //reset solar system (remove components from scene) or hide them by making hidden
-    //sunPreview.remove(originPoint);
-
-
-    // reticle.add(sunPreview);
-    //sunPreview.position.set(0, 0, 0);
-    //sunPreview.position.y = 0.3; //TODO could be fun to have a sit/stand mode to alter for different sizes and height
-
-
   } else {
     showSolarSystem = true;
 
@@ -445,12 +438,12 @@ function createReticle(){
   reticle = new THREE.Object3D();
 
   let ringGeometry = new THREE.RingGeometry(0.07, 0.09, 24, 1);
-  let material = new THREE.MeshBasicMaterial({ color: 0x34d2eb });
+  let ringMaterial = new THREE.MeshBasicMaterial({ color: 0x34d2eb });
   ringGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(-90)));
-  let circle = new THREE.Mesh(ringGeometry, material);
+  let circle = new THREE.Mesh(ringGeometry, ringMaterial);
   circle.position.y = 0.03;
 
-  sunPreview.position.y = 0.3; //TODO could be fun to have a sit/stand mode to alter for different sizes and height
+  sunPreview.position.y = 0.2; //TODO could be fun to have a sit/stand mode to alter for different sizes and height
 
   reticle.add(circle);
   reticle.add(sunPreview);
