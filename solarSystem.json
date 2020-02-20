@@ -1,8 +1,8 @@
 {
    "numPlanets":9,
    "sizeScale":1000000000,
-   "distanceScale":2000000000,
-   "orbitScale": 10,
+   "distanceScale":1000000000,
+   "orbitScale": 1,
    "rotationScale": 10,
    "showPlanetLines":true,
    "traversal":false,
