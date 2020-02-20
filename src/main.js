@@ -62,6 +62,14 @@ sunObj = new THREE.Object3D();
 moonObj = new THREE.Object3D();
 moonPivot = new THREE.Object3D();
 
+<<<<<<< HEAD
+=======
+// for (var i=0; i < jsonObj.numPlanets; i++){
+//   pivots[i] = new THREE.Object3D();
+//   originPoint.add(pivots[i]);
+// }
+
+>>>>>>> 8fa9ed9... adding in the planets
 
 /**********
 Create Camera
@@ -93,7 +101,7 @@ function init() {
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  sunPreview = new THREE.Mesh( geometry, green);
+  sunPreview = new THREE.Mesh( geometry, yellow);
 
   originPoint = new THREE.Object3D();
 
@@ -121,6 +129,7 @@ function init() {
       error => onError(error)
     );
   }
+<<<<<<< HEAD
 
   //Earths Moon
   loader.load(
@@ -129,6 +138,17 @@ function init() {
     xhr => onProgress(xhr),
     error => onError(error)
   );
+=======
+  var num;
+
+  // //Earths Moon
+  // loader.load(
+  //   jsonObj.planets[2].moon.file,
+  //   gltf => loadMoon( gltf ),
+  //   xhr => onProgress(xhr),
+  //   error => onError(error)
+  // );
+>>>>>>> 8fa9ed9... adding in the planets
 
 
   if (navigator.xr) {
@@ -170,6 +190,10 @@ var loadSun = ( gltf ) => {
   sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10);
+<<<<<<< HEAD
+=======
+                    //0.0000695510, 0.0000695510, 0.0000695510);
+>>>>>>> 8fa9ed9... adding in the planets
   sunObj.rotateZ(jsonObj.sun.rotationAngle);
   sunObj.name = jsonObj.sun.name;
   originPoint.add(sunObj);
@@ -234,10 +258,16 @@ var loadPlanet = ( gltf ) => {
   //                           planets[num].position.z);
 
   //Pivot
+  pivots[num] = new THREE.Object3D();
+  originPoint.add(pivots[num]);
+
   pivots[num].add(planets[num]);
+<<<<<<< HEAD
 
   console.log(planets[num]);
 
+=======
+>>>>>>> 8fa9ed9... adding in the planets
   //pivots[num].add(planetTargets[num]);
   pivots[num].rotateZ(jsonObj.planets[num].orbitInclination);
 
