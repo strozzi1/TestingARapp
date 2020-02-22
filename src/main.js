@@ -62,14 +62,6 @@ sunObj = new THREE.Object3D();
 moonObj = new THREE.Object3D();
 moonPivot = new THREE.Object3D();
 
-<<<<<<< HEAD
-=======
-// for (var i=0; i < jsonObj.numPlanets; i++){
-//   pivots[i] = new THREE.Object3D();
-//   originPoint.add(pivots[i]);
-// }
-
->>>>>>> 8fa9ed9... adding in the planets
 
 /**********
 Create Camera
@@ -129,8 +121,6 @@ function init() {
       error => onError(error)
     );
   }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
   //Earths Moon
   loader.load(
@@ -139,19 +129,6 @@ function init() {
     xhr => onProgress(xhr),
     error => onError(error)
   );
-=======
-  var num;
-=======
->>>>>>> a830ba2... Planets
-
-  // //Earths Moon
-  // loader.load(
-  //   jsonObj.planets[2].moon.file,
-  //   gltf => loadMoon( gltf ),
-  //   xhr => onProgress(xhr),
-  //   error => onError(error)
-  // );
->>>>>>> 8fa9ed9... adding in the planets
 
 
   if (navigator.xr) {
@@ -193,13 +170,6 @@ var loadSun = ( gltf ) => {
   sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10,
                     jsonObj.sun.radius/jsonObj.sizeScale/10);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                    //0.0000695510, 0.0000695510, 0.0000695510);
->>>>>>> 8fa9ed9... adding in the planets
-=======
->>>>>>> 929cd43... planets
   sunObj.rotateZ(jsonObj.sun.rotationAngle);
   sunObj.name = jsonObj.sun.name;
   originPoint.add(sunObj);
@@ -265,18 +235,9 @@ var loadPlanet = ( gltf ) => {
 
   //Pivot
   pivots[num].add(planets[num]);
-<<<<<<< HEAD
-<<<<<<< HEAD
 
   console.log(planets[num]);
 
-=======
->>>>>>> 8fa9ed9... adding in the planets
-=======
-
-  console.log(planets[num]);
-
->>>>>>> 6ce5121... planet
   //pivots[num].add(planetTargets[num]);
   pivots[num].rotateZ(jsonObj.planets[num].orbitInclination);
 
