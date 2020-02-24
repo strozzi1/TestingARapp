@@ -27,11 +27,11 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "index.html",
-    "revision": "4a9d46c95a0cb4f8fe261139d57630b9"
+    "revision": "81ef36d993bd96c9845cf39bb09d3c09"
   },
   {
-    "url": "main-43de51fd.js",
-    "revision": "40086cf90e8af24f21876bfcd4aa8ffb"
+    "url": "main-a955e478.js",
+    "revision": "289c1b600967ec10760f4e7e6e106ca5"
   },
   {
     "url": "model/planets-glb/neptune/Neptune.glb",
@@ -63,7 +63,7 @@ self.__precacheManifest = [
   },
   {
     "url": "src/main.js",
-    "revision": "cf71cb6ccce8904c0bea328925375785"
+    "revision": "8929b14e6fdeeff9d3f2ce97b56dacfe"
   },
   {
     "url": "src/solar.js",

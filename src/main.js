@@ -401,10 +401,10 @@ function checkSupportedState() {
     renderer.render(scene, camera)
   }
 
-function touchSelectEvent() {
+function touchSelectEvent(ev) {
   if (showSolarSystem){
-
-    let inputPose = event.frame.getInputPose(event.inputSource, xrRefSpace);
+    console.log(ev);
+    let inputPose = ev.frame.getInputPose(ev.inputSource, xrRefSpace);
     console.log(inputPose);
 
     if (!inputPose) {
