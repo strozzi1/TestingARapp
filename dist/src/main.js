@@ -89,11 +89,9 @@ function init() {
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  sunPreview = new THREE.Mesh( geometry, green);
+  sunPreview = new THREE.Mesh( geometry, yellow);
 
   originPoint = new THREE.Object3D();
-
-  window.addEventListener('pointerdown', touchSelectEvent, false);
 
   loadModels();
 
@@ -280,7 +278,7 @@ function checkSupportedState() {
       xrSession = await navigator.xr.requestSession('immersive-ar');
       xrRefSpace = await xrSession.requestReferenceSpace('local');
 
-      xrSession.addEventListener('select', touchXRSelectEvent);
+      xrSession.addEventListener('select', touchSelectEvent);
 
       let gl = renderer.getContext();
       await gl.makeXRCompatible();
@@ -403,11 +401,29 @@ function checkSupportedState() {
     renderer.render(scene, camera)
   }
 
-function touchXRSelectEvent() {
+function touchSelectEvent() {
   if (showSolarSystem){
-    // let mouse = new THREE.Vector2();
-    // console.log(event);
-    //checkRaycasting(mouse);
+
+    let inputPose = event.frame.getInputPose(event.inputSource, xrFrame); //xrRefSpace
+    console.log(inputPose);
+
+    if (!inputPose) {
+      return;
+    }
+    if (inputPose.pointerMatrix) {
+      let hitResult = scene.hitTest(inputPose.pointerMatrix);
+      if (hitResult) {
+        console.log(hitRequest);
+      }
+    }
+    //let mouse = new THREE.Vector2();
+    //let sceneRaycaster = new THREE.Raycaster();
+    //console.log(event);
+
+    //sceneRaycaster.setFromCamera( mouse, camera );
+    //let intersects = sceneRaycaster.intersectObjects(scene.children, true);
+    //if (intersects.length > 0){
+    //  console.log(intersects);
 
     // //TODO Change this to a reset button when the solar system is in place
     // showSolarSystem = false;
@@ -419,21 +435,6 @@ function touchXRSelectEvent() {
     scene.add(originPoint);
     originPoint.position.setFromMatrixPosition(sunPreviewMatrix);
 
-  }
-}
-
-function touchSelectEvent() {
-  if (showSolarSystem){
-    let mouse = new THREE.Vector2();
-    let sceneRaycaster = new THREE.Raycaster();
-
-    console.log(event);
-
-    //sceneRaycaster.setFromCamera( mouse, camera );
-    //let intersects = sceneRaycaster.intersectObjects(scene.children, true);
-    //if (intersects.length > 0){
-    //  console.log(intersects);
-    //}
   }
 }
 
