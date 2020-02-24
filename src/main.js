@@ -408,12 +408,26 @@ function touchSelectEvent() {
     console.log(inputPose);
 
     if (inputPose) {
-      let hitResult = scene.hitTest(inputPose.transform);
 
-      if (hitResult) {
-        console.log(hitResult);
-      }
+      let targetRay = new XRRay(inputPose.transform);
+      let rayOrigin = new THREE.Vector3(targetRay.origin.x, targetRay.origin.y, targetRay.origin.z);
+      let rayDirection = new THREE.Vector3(targetRay.direction.x, targetRay.direction.y, targetRay.direction.z);
+      // let rayOrigin = vec3.create();
+      // let rayDirection = vec3.create();
+
+      let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z}, {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
+      event.frame.session.requestHitTest(ray, xrRefSpace).then((hitResult) => {
+        if (hitResult) {
+          console.log(hitResult);
+        }
+      })
     }
+
+    // let rayOrigin = raycaster.ray.origin;
+    // let rayDirection = raycaster.ray.direction;
+    // let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
+    //   {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
+
     //let mouse = new THREE.Vector2();
     //let sceneRaycaster = new THREE.Raycaster();
     //console.log(event);
