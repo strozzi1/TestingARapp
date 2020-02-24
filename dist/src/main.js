@@ -401,18 +401,15 @@ function checkSupportedState() {
     renderer.render(scene, camera)
   }
 
-function touchSelectEvent(ev) {
+function touchSelectEvent() {
   if (showSolarSystem){
-    console.log(ev);
-    let inputPose = ev.frame.getPose(ev.inputSource.targetRaySpace, xrRefSpace);
+    // console.log(event);
+    let inputPose = event.frame.getPose(event.inputSource.targetRaySpace, xrRefSpace);
     console.log(inputPose);
 
-    if (!inputPose) {
-      return;
-    }
-    if (inputPose.pointerMatrix) {
-      let hitResult = scene.hitTest(inputPose.pointerMatrix);
-        //scene.virtualHitTest(inputSourcePose.transform)
+    if (inputPose) {
+      let hitResult = scene.virtualHitTest(inputPose.transform);
+
       if (hitResult) {
         console.log(hitRequest);
       }
