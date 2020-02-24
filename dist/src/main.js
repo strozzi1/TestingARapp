@@ -93,6 +93,17 @@ function init() {
 
   originPoint = new THREE.Object3D();
 
+  //test
+  window.addEventListener('mousedown', () => {
+    console.log("98: mousedown");
+  });
+  window.addEventListener('touchstart', () => {
+    console.log("101: touchstart");
+  });
+  window.addEventListener('pointerdown', () => {
+    console.log("104: pointerdown");
+  });
+
   loadModels();
 
   if (navigator.xr) {
@@ -255,6 +266,18 @@ function checkSupportedState() {
       // xrButton.innerHTML = 'Enter AR';
 
       xrButton.addEventListener('click', toggleAR);
+
+      //test
+      window.addEventListener('mousedown', () => {
+        console.log("260: mousedown");
+      });
+      window.addEventListener('touchstart', () => {
+        console.log("264: touchstart");
+      });
+      window.addEventListener('pointerdown', () => {
+        console.log("278: pointerdown");
+      });
+
       console.log("AR READY!");
     } else {
 
@@ -413,14 +436,10 @@ function touchSelectEvent() {
       let rayOrigin = new THREE.Vector3(targetRay.origin.x, targetRay.origin.y, targetRay.origin.z);
       let rayDirection = new THREE.Vector3(targetRay.direction.x, targetRay.direction.y, targetRay.direction.z);
 
-      console.log(rayOrigin);
-      console.log(rayDirection);
+      
 
-      console.log(test);
-      console.log(window.innerHeight);
-
-      let mouse = new THREE.Vector2();
-      let sceneRaycaster = new THREE.Raycaster();
+      // let mouse = new THREE.Vector2();
+      // let sceneRaycaster = new THREE.Raycaster();
 
       //sceneRaycaster.setFromCamera( mouse, camera);
     }
