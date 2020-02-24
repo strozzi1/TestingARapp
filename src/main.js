@@ -89,7 +89,7 @@ function init() {
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  sunPreview = new THREE.Mesh( geometry, yellow);
+  sunPreview = new THREE.Mesh( geometry, green);
 
   originPoint = new THREE.Object3D();
 
@@ -404,7 +404,7 @@ function checkSupportedState() {
 function touchSelectEvent() {
   if (showSolarSystem){
 
-    let inputPose = event.frame.getInputPose(event.inputSource, xrFrame); //xrRefSpace
+    let inputPose = event.frame.getInputPose(event.inputSource, xrRefSpace);
     console.log(inputPose);
 
     if (!inputPose) {
