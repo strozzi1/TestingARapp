@@ -404,7 +404,7 @@ function checkSupportedState() {
 function touchSelectEvent(ev) {
   if (showSolarSystem){
     console.log(ev);
-    let inputPose = ev.frame.getPose(ev.inputSource, xrRefSpace);
+    let inputPose = ev.frame.getPose(ev.inputSource.targetRaySpace, xrRefSpace);
     console.log(inputPose);
 
     if (!inputPose) {
