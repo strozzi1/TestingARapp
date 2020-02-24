@@ -93,17 +93,6 @@ function init() {
 
   originPoint = new THREE.Object3D();
 
-  //test
-  window.addEventListener('mousedown', () => {
-    console.log("98: mousedown");
-  });
-  window.addEventListener('touchstart', () => {
-    console.log("101: touchstart");
-  });
-  window.addEventListener('pointerdown', () => {
-    console.log("104: pointerdown");
-  });
-
   loadModels();
 
   if (navigator.xr) {
@@ -267,17 +256,6 @@ function checkSupportedState() {
 
       xrButton.addEventListener('click', toggleAR);
 
-      //test
-      window.addEventListener('mousedown', () => {
-        console.log("260: mousedown");
-      });
-      window.addEventListener('touchstart', () => {
-        console.log("264: touchstart");
-      });
-      window.addEventListener('pointerdown', () => {
-        console.log("278: pointerdown");
-      });
-
       console.log("AR READY!");
     } else {
 
@@ -302,6 +280,7 @@ function checkSupportedState() {
       xrRefSpace = await xrSession.requestReferenceSpace('local');
 
       xrSession.addEventListener('select', touchSelectEvent);
+
 
       let gl = renderer.getContext();
       await gl.makeXRCompatible();
@@ -426,26 +405,31 @@ function checkSupportedState() {
 
 function touchSelectEvent() {
   if (showSolarSystem){
-    // console.log(event);
+    console.log(event);
+
     let inputPose = event.frame.getPose(event.inputSource.targetRaySpace, xrRefSpace);
-    console.log(inputPose);
+
 
     if (inputPose) {
 
-      let targetRay = new XRRay(inputPose.transform);
-      let rayOrigin = new THREE.Vector3(targetRay.origin.x, targetRay.origin.y, targetRay.origin.z);
-      let rayDirection = new THREE.Vector3(targetRay.direction.x, targetRay.direction.y, targetRay.direction.z);
+      console.log(inputPose);
 
-      
+      // let targetRay = new XRRay(inputPose.transform);
+      // let rayOrigin = new THREE.Vector3(targetRay.origin.x, targetRay.origin.y, targetRay.origin.z);
+      // let rayDirection = new THREE.Vector3(targetRay.direction.x, targetRay.direction.y, targetRay.direction.z);
+
+
 
       // let mouse = new THREE.Vector2();
       // let sceneRaycaster = new THREE.Raycaster();
 
       //sceneRaycaster.setFromCamera( mouse, camera);
+      // let rayOrigin = raycaster.ray.origin;
+      // let rayDirection = raycaster.ray.direction;
     }
 
-    // let rayOrigin = raycaster.ray.origin;
-    // let rayDirection = raycaster.ray.direction;
+
+
     // let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
     //   {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
     // let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z}, {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
