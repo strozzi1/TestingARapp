@@ -86,10 +86,6 @@ camera.add(light);
 //Inital function that starts AR off. Establishes AR to button with eventlistener
 function init() {
 
-
-  //Load in Models
-  //TODO add new function for adding models
-
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
@@ -97,10 +93,18 @@ function init() {
 
   originPoint = new THREE.Object3D();
 
-  /**********
-  Load Models
-  => Use the GLTFLoader to load all nessisary models and set the models to appropriate objects
-  **********/
+  loadModels();
+
+  if (navigator.xr) {
+    checkSupportedState();
+  }
+}
+
+/**********
+Load Models
+**********/
+function loadModels() {
+
   var loader = new GLTFLoader();
 
   //Sun
@@ -129,42 +133,14 @@ function init() {
     xhr => onProgress(xhr),
     error => onError(error)
   );
-
-
-  if (navigator.xr) {
-    checkSupportedState();
-  }
 }
 
 /**********
 Load Model Functions
-***********
-=> These functions are called when the model is first loaded
-=> Sun:
-  => Set scale based on Json values
-  => Set Y axis angle based on Json value
-  => add to scene (Note: will be position to (0,0,0))
-
-=> Planets:
-  => Uses switch statement to determin which planet is loading in at this time (Note: planets dont load in order)
-  => Set scale and position based on Json values
-  => Set Y axis angle based on Json value
-  => Set planets parent to proper pivot object (Pivot is already set to scene, and set to (0, 0, 0))
-  => Set Y axis of the pivot to the orbit inclination value in the json
-  => Create orbit rings and set Y axis of orbit ring based on the orbit inclination
-  => Add to scene(Note: will be set to (0, 0, 0))
-
-=> Moon:
-  => Set moonPivot to the location of the Earth (uses the same values from the Json)
-  => Set the scale and position of the moon based on json values
-  => Set hierarchy as Earth > moonPivot > moonObj
-  => Set Y axis of the pivot and the moon obj based on the json values
-
-=> Note: Each Planet, Sun, and Moon begins with a scale of 1, equivalent to (1000, 1000, 1000)
-**********/
+***********/
 
 //Load Sun Model
-var loadSun = ( gltf ) => {
+function loadSun(gltf) {
   sunObj = gltf.scene;
   //TODO: remove /10, Maybe?
   sunObj.scale.set( jsonObj.sun.radius/jsonObj.sizeScale/10,
@@ -176,7 +152,7 @@ var loadSun = ( gltf ) => {
 };
 
 //Load Planet Models
-var loadPlanet = ( gltf ) => {
+function loadPlanet(gltf) {
   let num;
 
   //Order Planets
@@ -212,6 +188,7 @@ var loadPlanet = ( gltf ) => {
       break;
   }
 
+  //Add pivot to center
   pivots[num] = new THREE.Object3D();
   originPoint.add(pivots[num]);
 
@@ -224,24 +201,14 @@ var loadPlanet = ( gltf ) => {
   planets[num].position.set(pivots[num].position.x + jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale,
                             pivots[num].position.y,
                             pivots[num].position.z);
-
   planets[num].rotateZ(jsonObj.planets[num].rotationAngle);
   planets[num].name = jsonObj.planets[num].name;
 
-  //Planet Target
-  // planetTargets[num].position.set(planets[num].position.x - (jsonObj.planets[num].radius)*1500 / jsonObj.sizeScale,
-  //                           planets[num].position.y,
-  //                           planets[num].position.z);
-
-  //Pivot
+  //Add planet to pivot
   pivots[num].add(planets[num]);
-
-  console.log(planets[num]);
-
-  //pivots[num].add(planetTargets[num]);
   pivots[num].rotateZ(jsonObj.planets[num].orbitInclination);
 
-  //Draw Orbit Lines
+  //Draw orbit lines based on planet
   let orbitMaterial = new THREE.LineBasicMaterial({ color:0xffffa1 });
   let orbitCircle = new THREE.CircleGeometry(jsonObj.planets[num].distanceFromSun/jsonObj.distanceScale, 100);
   orbitCircle.vertices.shift();
@@ -253,27 +220,22 @@ var loadPlanet = ( gltf ) => {
 };
 
 //Load Moon Model
-var loadMoon = ( gltf ) => {
+function loadMoon(gltf) {
   moonObj = gltf.scene;
-
   moonPivot.position.set( jsonObj.planets[2].distanceFromSun/jsonObj.distanceScale,
                           moonPivot.position.y,
                           moonPivot.position.z);
-
   moonObj.scale.set(jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
                     jsonObj.planets[2].moon.radius/jsonObj.sizeScale,
                     jsonObj.planets[2].moon.radius/jsonObj.sizeScale);
-
   moonObj.position.set( jsonObj.planets[2].radius/jsonObj.sizeScale + jsonObj.planets[2].moon.distanceFromEarth/jsonObj.distanceScale,
                         moonPivot.position.y,
                         moonPivot.position.z);
-
   moonObj.rotateZ(jsonObj.planets[2].moon.rotationAngle);
   moonObj.name = jsonObj.planets[2].moon.name;
 
   pivots[2].add(moonPivot);
   moonPivot.add(moonObj);
-
   moonPivot.rotateZ(jsonObj.planets[2].moon.orbitInclination);
 };
 
@@ -302,6 +264,7 @@ function checkSupportedState() {
   });
 }
 
+  //NOTE: This function can be removed if we want to (AR activated could be a json componet)
   async function toggleAR(){
     if (arActivated){
       console.log("AR is already activated");
@@ -440,8 +403,15 @@ function checkSupportedState() {
 
 function touchSelectEvent() {
   if (showSolarSystem){
-    //TODO Change this to a reset button when the solar system is in place
-    showSolarSystem = false;
+    //var raycaster = new THREE.Raycaster();
+    let mouse = new THREE.Vector2();
+
+    console.log(event);
+
+    checkRaycasting(mouse);
+
+    // //TODO Change this to a reset button when the solar system is in place
+    // showSolarSystem = false;
 
   } else {
     showSolarSystem = true;
@@ -453,6 +423,13 @@ function touchSelectEvent() {
   }
 }
 
+function checkRaycasting(mouse) {
+  raycaster.setFromCamera( mouse, camera );
+  var intersects = raycaster.intersectObjects(scene.children, true);
+  if (intersects.length > 0){
+    console.log(intersects);
+  }
+}
 
 function createReticle(){
   if (reticle){
