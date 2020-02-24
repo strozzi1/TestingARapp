@@ -89,7 +89,7 @@ function init() {
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  sunPreview = new THREE.Mesh( geometry, green);
+  sunPreview = new THREE.Mesh( geometry, yellow);
 
   originPoint = new THREE.Object3D();
 
@@ -408,10 +408,10 @@ function touchSelectEvent() {
     console.log(inputPose);
 
     if (inputPose) {
-      let hitResult = scene.virtualHitTest(inputPose.transform);
+      let hitResult = scene.hitTest(inputPose.transform);
 
       if (hitResult) {
-        console.log(hitRequest);
+        console.log(hitResult);
       }
     }
     //let mouse = new THREE.Vector2();
