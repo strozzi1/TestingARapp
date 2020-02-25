@@ -286,6 +286,9 @@ function checkSupportedState() {
       xrRefSpace = await xrSession.requestReferenceSpace('local');
 
       xrSession.addEventListener('select', touchSelectEvent);
+      xrSession.addEventListener('pointerdown', () => {
+        console.log('WORKS');
+      });
 
 
       let gl = renderer.getContext();
@@ -359,12 +362,12 @@ function checkSupportedState() {
           originPoint.visible = true;
         }
 
-        let hitTestResults = xrFrame.getHitTestResultsForTransientInput(transientInputHitTestSource);
-        hitTestResults.forEach(resultsPerInputSource => {
-          if (resultsPerInputSource.results.length > 0) {
-            console.log(resultsPerInputSource);
-          }
-        });
+        // let hitTestResults = xrFrame.getHitTestResultsForTransientInput(transientInputHitTestSource);
+        // hitTestResults.forEach(resultsPerInputSource => {
+        //   if (resultsPerInputSource.results.length > 0) {
+        //     console.log(resultsPerInputSource);
+        //   }
+        // });
 
 
         //TODO: Render Animations here
@@ -431,15 +434,19 @@ function touchSelectEvent() {
 
     if (inputPose) {
 
-      console.log(inputPose);
+      console.log(inputPose.transform);
 
-      let virtualHitTestResult = scene.virtualHitTest(new XRRay(inputPose.transform));
-      console.log(virtualHitTestResult);
+      let test = new THREE.Mesh( geometry, yellow);
+      scene.add(test);
+      test.position.copy(inputPose.transform.position);
+
+
+      // let virtualHitTestResult = scene.virtualHitTest(new XRRay(inputPose.transform));
+      // console.log(virtualHitTestResult);
 
       // let targetRay = new XRRay(inputPose.transform);
       // let rayOrigin = new THREE.Vector3(targetRay.origin.x, targetRay.origin.y, targetRay.origin.z);
       // let rayDirection = new THREE.Vector3(targetRay.direction.x, targetRay.direction.y, targetRay.direction.z);
-
 
 
       // let mouse = new THREE.Vector2();
