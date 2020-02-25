@@ -354,12 +354,12 @@ function checkSupportedState() {
           originPoint.visible = true;
         }
 
-        let hitTestResults = xrFrame.getHitTestResultsForTransientInput(transientInputHitTestSource);
-        hitTestResults.forEach(resultsPerInputSource => {
-          if (resultsPerInputSource.results.length > 0) {
-            console.log(resultsPerInputSource);
-          }
-        });
+        // let hitTestResults = xrFrame.getHitTestResultsForTransientInput(transientInputHitTestSource);
+        // hitTestResults.forEach(resultsPerInputSource => {
+        //   if (resultsPerInputSource.results.length > 0) {
+        //     console.log(resultsPerInputSource);
+        //   }
+        // });
 
 
         //TODO: Render Animations here
