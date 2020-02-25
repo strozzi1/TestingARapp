@@ -435,8 +435,9 @@ function touchSelectEvent() {
     if (inputPose) {
 
       console.log(inputPose.transform);
-
-      let test = new THREE.Mesh( geometry, yellow);
+      var geometry = new THREE.BoxGeometry( 0.05, 0.05, 0.05 );
+      var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
+      let test = new THREE.Mesh( geometry, green);
       scene.add(test);
       test.position.copy(inputPose.transform.position);
 
