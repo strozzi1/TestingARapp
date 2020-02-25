@@ -296,6 +296,7 @@ function checkSupportedState() {
       let layer = new XRWebGLLayer(xrSession, gl);
       xrSession.updateRenderState({ baseLayer: layer });
 
+      console.log(gl);
       //TODO 'end' eventlistener
 
       //Test
@@ -427,7 +428,7 @@ function checkSupportedState() {
 
 function touchSelectEvent() {
   if (showSolarSystem){
-    console.log(event);
+    //console.log(event);
 
     let inputPose = event.frame.getPose(event.inputSource.targetRaySpace, xrRefSpace);
 
@@ -435,12 +436,17 @@ function touchSelectEvent() {
     if (inputPose) {
 
       console.log(inputPose.transform);
-      var geometry = new THREE.BoxGeometry( 0.05, 0.05, 0.05 );
+      var geometry = new THREE.BoxGeometry( 0.005, 0.005, 0.005 );
       var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
+      var red = new THREE.MeshBasicMaterial( {color: 0xed3228} );
+
       let test = new THREE.Mesh( geometry, green);
       scene.add(test);
       test.position.copy(inputPose.transform.position);
 
+      let test2 = new THREE.Mesh( geometry, red);
+      scene.add(test2);
+      test.position.copy(camera.position);
 
       // let virtualHitTestResult = scene.virtualHitTest(new XRRay(inputPose.transform));
       // console.log(virtualHitTestResult);
