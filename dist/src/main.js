@@ -25,6 +25,12 @@ var arActivated = false;
 var reticle;
 let gl = null;
 
+//TEST: HitTestSourceInit
+let transientInputHitTestSource = null;
+let hitTestOptionsInit = {
+  profile: 'generic-touchscreen',
+  offsetRay: new XRRay()
+};
 
 /**********
 Load up JSON file
@@ -289,13 +295,6 @@ function checkSupportedState() {
 
       //TODO 'end' eventlistener
 
-      //TEST: HitTestSourceInit
-      let transientInputHitTestSource = null;
-      let hitTestOptionsInit = {
-        profile: 'generic-touchscreen',
-        offsetRay: new XRRay()
-      };
-
       xrSession.requestAnimationFrame(renderXR);
       arActivated = true;
 
@@ -446,11 +445,6 @@ function touchSelectEvent() {
       // let rayDirection = raycaster.ray.direction;
     }
 
-
-
-    // let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
-    //   {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
-    // let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z}, {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
 
     // event.frame.session.requestHitTest(ray, xrRefSpace).then((hitResult) => {
     //   if (hitResult) {

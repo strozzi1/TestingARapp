@@ -27,11 +27,11 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "index.html",
-    "revision": "35e593f5ce3e0750957f2674ad356860"
+    "revision": "2e3e8f6c02db6b3a96e9dd5d58443f81"
   },
   {
-    "url": "main-8cfb33c2.js",
-    "revision": "b5f7a372f65683acb3f7ce457e7dfda8"
+    "url": "main-cf446f8f.js",
+    "revision": "02bea20ab4aa29fedd2549729b2153d9"
   },
   {
     "url": "polyfills/custom-elements-es5-adapter.84b300ee818dce8b351c7cc7c100bcf7.js",
@@ -47,7 +47,7 @@ self.__precacheManifest = [
   },
   {
     "url": "src/main.js",
-    "revision": "4ee9b005d1891d0f2a623503f09d5692"
+    "revision": "6bacb9e5d4a0c0b4a20e08811559bc79"
   },
   {
     "url": "src/solar.js",
