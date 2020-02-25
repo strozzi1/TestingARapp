@@ -295,9 +295,14 @@ function checkSupportedState() {
 
       //TODO 'end' eventlistener
 
+      //Test
+      xrSession.requestHitTestSourceForTransientInput(hitTestOptionsInit).then((hitTestSource) => {
+        transientInputHitTestSource = hitTestSource;
+        transientInputHitTestSource.context = {options : hitTestOptionsInit };
+      });
+
       xrSession.requestAnimationFrame(renderXR);
       arActivated = true;
-
 
     } catch (error){
       console.log("Catch: "+ error);
@@ -354,12 +359,12 @@ function checkSupportedState() {
           originPoint.visible = true;
         }
 
-        // let hitTestResults = xrFrame.getHitTestResultsForTransientInput(transientInputHitTestSource);
-        // hitTestResults.forEach(resultsPerInputSource => {
-        //   if (resultsPerInputSource.results.length > 0) {
-        //     console.log(resultsPerInputSource);
-        //   }
-        // });
+        let hitTestResults = xrFrame.getHitTestResultsForTransientInput(transientInputHitTestSource);
+        hitTestResults.forEach(resultsPerInputSource => {
+          if (resultsPerInputSource.results.length > 0) {
+            console.log(resultsPerInputSource);
+          }
+        });
 
 
         //TODO: Render Animations here
@@ -428,7 +433,7 @@ function touchSelectEvent() {
 
       console.log(inputPose);
 
-      let virtualHitTestResult = scene.virtualHitTest(new XRRay(inputSourcePose.transform));
+      let virtualHitTestResult = scene.virtualHitTest(new XRRay(inputPose.transform));
       console.log(virtualHitTestResult);
 
       // let targetRay = new XRRay(inputPose.transform);
