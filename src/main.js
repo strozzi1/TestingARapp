@@ -95,7 +95,7 @@ function init() {
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  sunPreview = new THREE.Mesh( geometry, yellow);
+  sunPreview = new THREE.Mesh( geometry, green);
 
   originPoint = new THREE.Object3D();
 
@@ -455,10 +455,7 @@ function touchSelectEvent() {
       // let virtualHitTestResult = scene.virtualHitTest(new XRRay(inputPose.transform));
       // console.log(virtualHitTestResult);
 
-      // let targetRay = new XRRay(inputPose.transform);
-      // let rayOrigin = new THREE.Vector3(targetRay.origin.x, targetRay.origin.y, targetRay.origin.z);
-      // let rayDirection = new THREE.Vector3(targetRay.direction.x, targetRay.direction.y, targetRay.direction.z);
-
+      // let targetRay = new XRRay(inputPose.transform); //TODO: atempt to get three.js raycaster to this
 
       // let mouse = new THREE.Vector2();
       // let sceneRaycaster = new THREE.Raycaster();
@@ -467,13 +464,6 @@ function touchSelectEvent() {
       // let rayOrigin = raycaster.ray.origin;
       // let rayDirection = raycaster.ray.direction;
     }
-
-
-    // event.frame.session.requestHitTest(ray, xrRefSpace).then((hitResult) => {
-    //   if (hitResult) {
-    //     console.log(hitResult);
-    //   }
-    // })
 
 
 
