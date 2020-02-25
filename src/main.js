@@ -297,6 +297,10 @@ function checkSupportedState() {
       xrSession.updateRenderState({ baseLayer: layer });
 
       console.log(gl);
+      gl.canvas.addEventListener('pointerdown', () => {
+        console.log("works");
+      });
+
       //TODO 'end' eventlistener
 
       //Test
@@ -438,12 +442,12 @@ function touchSelectEvent() {
       console.log(inputPose.transform);
       var geometry = new THREE.BoxGeometry( 0.005, 0.005, 0.005 );
       var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
-      var red = new THREE.MeshBasicMaterial( {color: 0xed3228} );
-
       let test = new THREE.Mesh( geometry, green);
       scene.add(test);
       test.position.copy(inputPose.transform.position);
 
+      var geometry2 = new THREE.BoxGeometry( 0.005, 0.005, 0.005 );
+      var red = new THREE.MeshBasicMaterial( {color: 0xed3228} );
       let test2 = new THREE.Mesh( geometry, red);
       scene.add(test2);
       test.position.copy(camera.position);
