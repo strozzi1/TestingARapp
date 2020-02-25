@@ -330,6 +330,7 @@ var moonSelect = () => {
     jsonObj.sun.beingViewed = false;
     jsonObj.planets[2].moon.beingViewed = false;
     for (var i=0; i<jsonObj.numPlanets; i++){
+
       jsonObj.planets[i].beingViewed = false;
     }
     jsonObj.planets[2].moon.beingViewed = true;

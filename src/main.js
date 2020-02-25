@@ -289,6 +289,13 @@ function checkSupportedState() {
 
       //TODO 'end' eventlistener
 
+      //TEST: HitTestSourceInit
+      let transientInputHitTestSource = null;
+      let hitTestOptionsInit = {
+        profile: 'generic-touchscreen',
+        offsetRay: new XRRay()
+      };
+
       xrSession.requestAnimationFrame(renderXR);
       arActivated = true;
 
@@ -347,6 +354,14 @@ function checkSupportedState() {
           reticle.visible = false;
           originPoint.visible = true;
         }
+
+        let hitTestResults = xrFrame.getHitTestResultsForTransientInput(transientInputHitTestSource);
+        hitTestResults.forEach(resultsPerInputSource => {
+          if (resultsPerInputSource.results.length > 0) {
+            console.log(resultsPerInputSource);
+          }
+        });
+
 
         //TODO: Render Animations here
         //Sun Rotation
@@ -413,6 +428,9 @@ function touchSelectEvent() {
     if (inputPose) {
 
       console.log(inputPose);
+
+      let virtualHitTestResult = scene.virtualHitTest(new XRRay(inputSourcePose.transform));
+      console.log(virtualHitTestResult);
 
       // let targetRay = new XRRay(inputPose.transform);
       // let rayOrigin = new THREE.Vector3(targetRay.origin.x, targetRay.origin.y, targetRay.origin.z);
