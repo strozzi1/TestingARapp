@@ -95,7 +95,9 @@ function init() {
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  sunPreview = new THREE.Mesh( geometry, green);
+  var gray = new THREE.MeshBasicMaterial( {color: 0xD3D3D3} ); //light gray
+  var gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
+  sunPreview = new THREE.Mesh( geometry, grey2);
 
   originPoint = new THREE.Object3D();
 
@@ -448,7 +450,7 @@ function touchSelectEvent() {
 
       var geometry2 = new THREE.BoxGeometry( 0.005, 0.005, 0.005 );
       var red = new THREE.MeshBasicMaterial( {color: 0xed3228} );
-      let test2 = new THREE.Mesh( geometry, red);
+      let test2 = new THREE.Mesh( geometry2, red);
       scene.add(test2);
       test2.position.copy(camera.position);
 
