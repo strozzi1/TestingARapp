@@ -93,12 +93,15 @@ camera.add(light);
 function init() {
 
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
-  var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
-  var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
+  var green = new THREE.MeshBasicMaterial( {color: 0x00ff00, transparent: true} ); //Green
+  green.opacity = 0.3;
+  var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00, transparent: true} ); //Yellow
+  yellow.opacity = 0.3;
   var gray = new THREE.MeshBasicMaterial( {color: 0xD3D3D3, transparent: true} ); //light gray
-  gray.opacity = 0.1;
+  gray.opacity = 0.3;
   var gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
-  sunPreview = new THREE.Mesh( geometry, gray);
+  gray2.opacity = 0.3;
+  sunPreview = new THREE.Mesh( geometry, yellow);
 
   originPoint = new THREE.Object3D();
 
@@ -441,19 +444,19 @@ function touchSelectEvent() {
       let rayDirection = new THREE.Vector3(targetRay.direction.x, targetRay.direction.y, targetRay.direction.z);
       console.log(rayDirection);
 
-      let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
-        {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
-      event.frame.session.requestHitTest(ray, xrRefSpace).then((hitResult) => {
-        if (hitResult) {
-          console.log(hitResult);
-        }
-      })
+      let sceneRaycaster = new THREE.Raycaster(rayOrigin, rayDirection);
+      let intersects = sceneRaycaster.intersectObjects(scene.children, true);
+      if (intersects.length > 0){
+       console.log(intersects);
+      }
 
-      // let sceneRaycaster = new THREE.Raycaster(inputPose.transform.position, inputPose.transform.orientation);
-      // let intersects = sceneRaycaster.intersectObjects(scene.children, true);
-      // if (intersects.length > 0){
-      //  console.log(intersects);
-      // }
+      // let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
+      //   {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
+      // event.frame.session.requestHitTest(ray, xrRefSpace).then((hitResult) => {
+      //   if (hitResult) {
+      //     console.log(hitResult);
+      //   }
+      // })
 
       // console.log(inputPose.transform);
 
