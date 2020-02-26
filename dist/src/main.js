@@ -101,9 +101,10 @@ function init() {
   gray.opacity = 0.3;
   var gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
   gray2.opacity = 0.3;
-  sunPreview = new THREE.Mesh( geometry, yellow);
+  sunPreview = new THREE.Mesh( geometry, green);
 
   originPoint = new THREE.Object3D();
+  originPoint.name = "origin";
 
   loadModels();
 
@@ -202,6 +203,7 @@ function loadPlanet(gltf) {
 
   //Add pivot to center
   pivots[num] = new THREE.Object3D();
+  pivots[num].name = "pivotPoint";
   originPoint.add(pivots[num]);
 
   //Planet
@@ -228,6 +230,7 @@ function loadPlanet(gltf) {
   orbitCircle.rotateZ(jsonObj.planets[num].orbitInclination);
 
   orbitLines[num] = new THREE.LineLoop( orbitCircle, orbitMaterial);
+  orbitLines[num].name = "oribitLine";
   originPoint.add(orbitLines[num]);
 };
 
