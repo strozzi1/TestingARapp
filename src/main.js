@@ -286,8 +286,8 @@ function checkSupportedState() {
       xrRefSpace = await xrSession.requestReferenceSpace('local');
 
       xrSession.addEventListener('select', touchSelectEvent);
-      xrSession.addEventListener('pointerdown', () => {
-        console.log('WORKS');
+      xrSession.addEventListener('touchstart', (event) => {
+        console.log(event);
       });
 
 
@@ -296,9 +296,9 @@ function checkSupportedState() {
       let layer = new XRWebGLLayer(xrSession, gl);
       xrSession.updateRenderState({ baseLayer: layer });
 
-      console.log(gl);
-      gl.canvas.addEventListener('pointerdown', () => {
-        console.log("works");
+      //console.log(gl);
+      gl.canvas.addEventListener('touchstart', (event) => {
+        console.log(event);
       });
 
       //TODO 'end' eventlistener
@@ -450,7 +450,7 @@ function touchSelectEvent() {
       var red = new THREE.MeshBasicMaterial( {color: 0xed3228} );
       let test2 = new THREE.Mesh( geometry, red);
       scene.add(test2);
-      test.position.copy(camera.position);
+      test2.position.copy(camera.position);
 
       // let virtualHitTestResult = scene.virtualHitTest(new XRRay(inputPose.transform));
       // console.log(virtualHitTestResult);
