@@ -95,9 +95,10 @@ function init() {
   var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
-  var gray = new THREE.MeshBasicMaterial( {color: 0xD3D3D3} ); //light gray
+  var gray = new THREE.MeshBasicMaterial( {color: 0xD3D3D3, transparent: true} ); //light gray
+  gray.opacity = 0.1;
   var gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
-  sunPreview = new THREE.Mesh( geometry, gray2);
+  sunPreview = new THREE.Mesh( geometry, gray);
 
   originPoint = new THREE.Object3D();
 
@@ -288,20 +289,11 @@ function checkSupportedState() {
       xrRefSpace = await xrSession.requestReferenceSpace('local');
 
       xrSession.addEventListener('select', touchSelectEvent);
-      xrSession.addEventListener('touchstart', (event) => {
-        console.log(event);
-      });
-
 
       let gl = renderer.getContext();
       await gl.makeXRCompatible();
       let layer = new XRWebGLLayer(xrSession, gl);
       xrSession.updateRenderState({ baseLayer: layer });
-
-      //console.log(gl);
-      gl.canvas.addEventListener('touchstart', (event) => {
-        console.log(event);
-      });
 
       //TODO 'end' eventlistener
 
@@ -440,42 +432,49 @@ function touchSelectEvent() {
 
 
     if (inputPose) {
+      console.log(inputPose);
 
-      console.log(inputPose.transform);
-      var geometry = new THREE.BoxGeometry( 0.005, 0.005, 0.005 );
-      var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
-      let test = new THREE.Mesh( geometry, green);
-      scene.add(test);
-      test.position.copy(inputPose.transform.position);
+      let sceneRaycaster = new THREE.Raycaster(inputPose.transform.position, inputPose.transform.orientation);
+      let intersects = sceneRaycaster.intersectObjects(scene.children, true);
+      if (intersects.length > 0){
+       console.log(intersects);
+      }
 
-      var geometry2 = new THREE.BoxGeometry( 0.005, 0.005, 0.005 );
-      var red = new THREE.MeshBasicMaterial( {color: 0xed3228} );
-      let test2 = new THREE.Mesh( geometry2, red);
-      scene.add(test2);
-      test2.position.copy(camera.position);
+      // console.log(inputPose.transform);
+
+      //test boxs
+      // var geometry = new THREE.BoxGeometry( 0.005, 0.005, 0.005 );
+      // var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
+      // let test = new THREE.Mesh( geometry, green);
+      // scene.add(test);
+      // test.position.copy(inputPose.transform.position);
+      //
+      // var geometry2 = new THREE.BoxGeometry( 0.005, 0.005, 0.005 );
+      // var red = new THREE.MeshBasicMaterial( {color: 0xed3228} );
+      // let test2 = new THREE.Mesh( geometry2, red);
+      // scene.add(test2);
+      // test2.position.copy(camera.position);
+
 
       // let virtualHitTestResult = scene.virtualHitTest(new XRRay(inputPose.transform));
-      // console.log(virtualHitTestResult);
+      // console.log(virtualHitTestResult); //TODO atempt in renderXR
+
 
       // let targetRay = new XRRay(inputPose.transform); //TODO: atempt to get three.js raycaster to this
+
 
       // let mouse = new THREE.Vector2();
       // let sceneRaycaster = new THREE.Raycaster();
 
-      //sceneRaycaster.setFromCamera( mouse, camera);
-      // let rayOrigin = raycaster.ray.origin;
-      // let rayDirection = raycaster.ray.direction;
     }
 
 
 
-    //sceneRaycaster.setFromCamera( mouse, camera );
-    //let intersects = sceneRaycaster.intersectObjects(scene.children, true);
-    //if (intersects.length > 0){
-    //  console.log(intersects);
 
-    // //TODO Change this to a reset button when the solar system is in place
-    // showSolarSystem = false;
+
+
+    //TODO Change this to a reset button when the solar system is in place
+    //showSolarSystem = false;
 
   } else {
     showSolarSystem = true;
