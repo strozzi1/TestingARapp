@@ -440,11 +440,12 @@ function touchSelectEvent() {
       //Test1
       let targetRay = new XRRay(inputPose.transform);
       let rayOrigin = new THREE.Vector3(targetRay.origin.x, targetRay.origin.y, targetRay.origin.z);
-      console.log(rayOrigin);
       let rayDirection = new THREE.Vector3(targetRay.direction.x, targetRay.direction.y, targetRay.direction.z);
-      console.log(rayDirection);
 
-      let sceneRaycaster = new THREE.Raycaster(rayOrigin, rayDirection);
+      let sceneRaycaster = new THREE.Raycaster();
+      sceneRaycaster.set(rayOrigin, rayDirection);
+
+      console.log(scene);
       let intersects = sceneRaycaster.intersectObjects(scene.children, true);
       if (intersects.length > 0){
        console.log(intersects);
