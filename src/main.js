@@ -101,7 +101,7 @@ function init() {
   gray.opacity = 0.3;
   var gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
   gray2.opacity = 0.5;
-  sunPreview = new THREE.Mesh( geometry, green);
+  sunPreview = new THREE.Mesh( geometry, gray2);
 
   originPoint = new THREE.Object3D();
   originPoint.name = "origin";
@@ -456,11 +456,13 @@ function touchSelectEvent() {
       // let testIntersection2 = sceneRaycaster.intersectObject(planets[4], true);
       // console.log(testIntersection2);
 
-      let intersectsArray = [sunObj, planets[4]];
+      let intersectsArray = [sunObj, planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
 
       let intersects = sceneRaycaster.intersectObjects(intersectsArray, true);
       if (intersects.length > 0){
-       console.log(intersects);
+        if (intersects[0].object.parent.name){
+          console.log(intersects[0].object.parent.name);
+        }
       }
 
       // let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
