@@ -96,12 +96,12 @@ function init() {
   var green = new THREE.MeshBasicMaterial( {color: 0x00ff00, transparent: true} ); //Green
   green.opacity = 0.3;
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00, transparent: true} ); //Yellow
-  yellow.opacity = 0.3;
+  yellow.opacity = 0.5;
   var gray = new THREE.MeshBasicMaterial( {color: 0xD3D3D3, transparent: true} ); //light gray
   gray.opacity = 0.3;
   var gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
   gray2.opacity = 0.3;
-  sunPreview = new THREE.Mesh( geometry, gray2);
+  sunPreview = new THREE.Mesh( geometry, yellow);
 
   originPoint = new THREE.Object3D();
   originPoint.name = "origin";
@@ -452,6 +452,9 @@ function touchSelectEvent() {
 
       let testIntersection = sceneRaycaster.intersectObject(sunObj, true);
       console.log(testIntersection);
+
+      let testIntersection2 = sceneRaycaster.intersectObject(planets[4], true);
+      console.log(testIntersection2);
 
       let intersects = sceneRaycaster.intersectObjects(scene.children[2].children, true);
       if (intersects.length > 0){
