@@ -97,7 +97,7 @@ function init() {
   var yellow = new THREE.MeshBasicMaterial( {color: 0xffff00} ); //Yellow
   var gray = new THREE.MeshBasicMaterial( {color: 0xD3D3D3} ); //light gray
   var gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
-  sunPreview = new THREE.Mesh( geometry, grey2);
+  sunPreview = new THREE.Mesh( geometry, gray2);
 
   originPoint = new THREE.Object3D();
 
