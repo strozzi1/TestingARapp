@@ -434,33 +434,41 @@ function touchSelectEvent() {
     if (inputPose) {
       console.log(inputPose);
 
-      let sceneRaycaster = new THREE.Raycaster(inputPose.transform.position, inputPose.transform.orientation);
-      let intersects = sceneRaycaster.intersectObjects(scene.children, true);
-      if (intersects.length > 0){
-       console.log(intersects);
-      }
+      //Test1
+      let targetRay = new XRRay(inputPose.transform);
+      let rayOrigin = new THREE.Vector3(targetRay.origin.x, targetRay.origin.y, targetRay.origin.z);
+      console.log(rayOrigin);
+      let rayDirection = new THREE.Vector3(targetRay.direction.x, targetRay.direction.y, targetRay.direction.z);
+      console.log(rayDirection);
+
+      let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
+        {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
+      event.frame.session.requestHitTest(ray, xrRefSpace).then((hitResult) => {
+        if (hitResult) {
+          console.log(hitResult);
+        }
+      })
+
+      // let sceneRaycaster = new THREE.Raycaster(inputPose.transform.position, inputPose.transform.orientation);
+      // let intersects = sceneRaycaster.intersectObjects(scene.children, true);
+      // if (intersects.length > 0){
+      //  console.log(intersects);
+      // }
 
       // console.log(inputPose.transform);
 
-      //test boxs
-      // var geometry = new THREE.BoxGeometry( 0.005, 0.005, 0.005 );
-      // var green = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); //Green
-      // let test = new THREE.Mesh( geometry, green);
-      // scene.add(test);
-      // test.position.copy(inputPose.transform.position);
-      //
-      // var geometry2 = new THREE.BoxGeometry( 0.005, 0.005, 0.005 );
-      // var red = new THREE.MeshBasicMaterial( {color: 0xed3228} );
-      // let test2 = new THREE.Mesh( geometry2, red);
-      // scene.add(test2);
-      // test2.position.copy(camera.position);
 
+      //Test2
+      // const x=0;
+      // const y=0;
+      // let raycaster = new THREE.Raycaster();
+      // raycaster.setFromCamera({ x, y }, camera);
 
+      //Test3
       // let virtualHitTestResult = scene.virtualHitTest(new XRRay(inputPose.transform));
       // console.log(virtualHitTestResult); //TODO atempt in renderXR
 
 
-      // let targetRay = new XRRay(inputPose.transform); //TODO: atempt to get three.js raycaster to this
 
 
       // let mouse = new THREE.Vector2();
