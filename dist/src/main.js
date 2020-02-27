@@ -563,7 +563,7 @@ function createReticle(){
 }
 
 function planetSelect(num){
-  let ranNum = MATH.floor(MATH.random() * 3);
+  let ranNum = Math.floor(Math.random() * 3);
   console.log(jsonObj.planets[num].facts[ranNum]);
 
   if (!jsonObj.planets[num].beingViewed){
