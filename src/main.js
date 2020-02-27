@@ -367,14 +367,6 @@ function checkSupportedState() {
           originPoint.visible = true;
         }
 
-        // let hitTestResults = xrFrame.getHitTestResultsForTransientInput(transientInputHitTestSource);
-        // hitTestResults.forEach(resultsPerInputSource => {
-        //   if (resultsPerInputSource.results.length > 0) {
-        //     console.log(resultsPerInputSource);
-        //   }
-        // });
-
-
         //TODO: Render Animations here
         //Sun Rotation
         if (sunObj){
@@ -436,11 +428,9 @@ function touchSelectEvent() {
 
     let inputPose = event.frame.getPose(event.inputSource.targetRaySpace, xrRefSpace);
 
-
     if (inputPose) {
       console.log(inputPose);
 
-      //Test1
       let targetRay = new XRRay(inputPose.transform);
       let rayOrigin = new THREE.Vector3(targetRay.origin.x, targetRay.origin.y, targetRay.origin.z);
       let rayDirection = new THREE.Vector3(targetRay.direction.x, targetRay.direction.y, targetRay.direction.z);
@@ -448,56 +438,94 @@ function touchSelectEvent() {
       let sceneRaycaster = new THREE.Raycaster();
       sceneRaycaster.set(rayOrigin, rayDirection);
 
-      // console.log(scene.children[2].children);
-      //
-      // let testIntersection = sceneRaycaster.intersectObject(sunObj, true);
-      // console.log(testIntersection);
-      //
-      // let testIntersection2 = sceneRaycaster.intersectObject(planets[4], true);
-      // console.log(testIntersection2);
-
       let intersectsArray = [sunObj, planets[1], planets[2], planets[3], planets[4], planets[5], planets[6], planets[7], planets[8]];
 
       let intersects = sceneRaycaster.intersectObjects(intersectsArray, true);
       if (intersects.length > 0){
         if (intersects[0].object.parent.name){
-          console.log(intersects[0].object.parent.name);
+          switch(intersects[0].object.parent.name){
+
+            case "Sun":
+              console.log("sun");
+              // sunSelect();
+              break;
+
+            case "Mercury":
+              planetSelect(0);
+              break;
+
+            case "Venus":
+              planetSelect(1);
+              break;
+
+            case "Earth":
+              planetSelect(2);
+
+              if (jsonObj.planets[2].beingViewed){
+                var point = planets[2].worldToLocal(intersects[0].point);
+
+                // if (antarcticaBox.containsPoint(point)){
+                //   console.log("Antarctica");
+                // } else if (australiaBox.containsPoint(point)){
+                //   console.log("Australia");
+                // } else if (europeBox.containsPoint(point)){
+                //   console.log("Europe");
+                // } else if (africaBox1.containsPoint(point)){
+                //   console.log("Africa");
+                // } else if (africaBox2.containsPoint(point)){
+                //   console.log("Africa");
+                // } else if (southAmericaBox1.containsPoint(point)){
+                //   console.log("South America");
+                // } else if (southAmericaBox2.containsPoint(point)){
+                //   console.log("South America");
+                // } else if (northAmericaBox1.containsPoint(point)){
+                //   console.log("North America");
+                // } else if (northAmericaBox2.containsPoint(point)){
+                //   console.log("North America");
+                // } else if (asiaBox1.containsPoint(point)){
+                //   console.log("Asia");
+                // } else if (asiaBox2.containsPoint(point)){
+                //   console.log("Asia");
+                // } else {
+                //   console.log("False");
+                // }
+              }
+              break;
+
+            // case "Moon":
+            //   moonSelect();
+            //   break;
+
+            case "Mars":
+              planetSelect(3);
+              break;
+
+            case "Jupiter":
+              planetSelect(4);
+              break;
+
+            case "Saturn":
+              planetSelect(5);
+              break;
+
+            case "Uranus":
+              planetSelect(6);
+              break;
+
+            case "Neptune":
+              planetSelect(7);
+              break;
+
+            case "Pluto":
+              planetSelect(8);
+              break;
+
+            default:
+              break;
+          }
         }
       }
-
-      // let ray = new XRRay({x : rayOrigin.x, y : rayOrigin.y, z : rayOrigin.z},
-      //   {x : rayDirection.x, y : rayDirection.y, z : rayDirection.z});
-      // event.frame.session.requestHitTest(ray, xrRefSpace).then((hitResult) => {
-      //   if (hitResult) {
-      //     console.log(hitResult);
-      //   }
-      // })
-
-      // console.log(inputPose.transform);
-
-
-      //Test2
-      // const x=0;
-      // const y=0;
-      // let raycaster = new THREE.Raycaster();
-      // raycaster.setFromCamera({ x, y }, camera);
-
-      //Test3
-      // let virtualHitTestResult = scene.virtualHitTest(new XRRay(inputPose.transform));
-      // console.log(virtualHitTestResult); //TODO atempt in renderXR
-
-
-
-
-      // let mouse = new THREE.Vector2();
-      // let sceneRaycaster = new THREE.Raycaster();
-
     }
-
-
-
-
-
 
     //TODO Change this to a reset button when the solar system is in place
     //showSolarSystem = false;
@@ -532,6 +560,20 @@ function createReticle(){
   reticle.name = 'reticle';
   scene.add(reticle);
 
+}
+
+function planetSelect(num){
+  let ranNum = MATH.floor(MATH.random() * 3);
+  console.log(jsonObj.planets[num].facts[ranNum]);
+
+  if (!jsonObj.planets[num].beingViewed){
+    jsonObj.sun.beingViewed = false;
+    jsonObj.planets[2].moon.beingViewed = false;
+    for (var i=0; i<jsonObj.numPlanets; i++){
+      jsonObj.planets[i].beingViewed = false;
+    }
+    jsonObj.planets[planetNum].beingViewed = true;
+  }
 }
 
 init();
