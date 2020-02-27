@@ -572,7 +572,7 @@ function planetSelect(num){
     for (var i=0; i<jsonObj.numPlanets; i++){
       jsonObj.planets[i].beingViewed = false;
     }
-    jsonObj.planets[planetNum].beingViewed = true;
+    jsonObj.planets[num].beingViewed = true;
   }
 }
 
