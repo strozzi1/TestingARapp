@@ -585,17 +585,17 @@ function planetSelect(num){
 
     //TODO move to the render function
     let dir = new THREE.Vector3();
-    dir.subVectors(cameraPoint.getWorldPosition(dir), planets[num].position).normalize();
-    console.log(dir);
     dir.subVectors(planets[num].getWorldPosition(dir), cameraPoint.position).normalize();
-    console.log(dir);
 
     let dist = new THREE.Vector3();
+    let distance;
+
     planets[num].getWorldPosition(dist);
-    dist = cameraPoint.position.distanceTO(dist);
-    console.log(dist);
+    distance = cameraPoint.position.distanceTo(dist);
+    console.log(distance);
+
     cameraPoint.getWorldPosition(dist);
-    dist = planets[num].position.distanceTO(dist);
+    distance = planets[num].position.distanceTo(dist);
     console.log(dist);
   }
 }
