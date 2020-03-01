@@ -596,7 +596,7 @@ function planetSelect(num){
 
     cameraPoint.getWorldPosition(dist);
     distance = planets[num].position.distanceTo(dist);
-    console.log(dist);
+    console.log(distance);
   }
 }
 
