@@ -80,7 +80,7 @@ scene.add(camera);
 //Test
 let boxGeometry = new THREE.BoxGeometry( 0.01, 0.01, 0.01 );
 let boxmaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-cameraPoint = new THREE.Mesh( boxGeometry, boxmaterial );
+let cameraPoint = new THREE.Mesh( boxGeometry, boxmaterial );
 camera.add( cameraPoint );
 cameraPoint.position.z -= 0.5;
 
@@ -109,7 +109,7 @@ function init() {
   gray.opacity = 0.3;
   let gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
   gray2.opacity = 0.5;
-  sunPreview = new THREE.Mesh( geometry, gray);
+  sunPreview = new THREE.Mesh( geometry, yellow);
 
   originPoint = new THREE.Object3D();
   originPoint.name = "origin";
