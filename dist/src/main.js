@@ -101,16 +101,28 @@ function init() {
   gray.opacity = 0.3;
   var gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
   gray2.opacity = 0.5;
-  sunPreview = new THREE.Mesh( geometry, gray2);
+  sunPreview = new THREE.Mesh( geometry, yellow);
 
   originPoint = new THREE.Object3D();
   originPoint.name = "origin";
 
+  setCameraTarget();
   loadModels();
 
   if (navigator.xr) {
     checkSupportedState();
   }
+}
+
+function setCameraTarget(){
+
+  //Test
+  let boxGeometry = new THREE.BoxGeometry( 0.01, 0.01, 0.01 );
+  let boxmaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+  let cube = new THREE.Mesh( boxGeometry, boxmaterial );
+  camera.add( cube );
+  cube.position.set(0,0,-100);
+
 }
 
 /**********
@@ -375,13 +387,15 @@ function checkSupportedState() {
 
         //Planet Rotation (rad/day)
         for (var i=0; i<jsonObj.numPlanets; i++){
-          if (planets[i]){
-              planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
+          if (!planets[i].beingViewed){
+            if (planets[i]){
+                planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
+            }
           }
         }
 
         // //Planet Orbit (rad/day)
-        for (var i=0; i<jsonObj.numPlanets; i++){ 
+        for (var i=0; i<jsonObj.numPlanets; i++){
           if (!planets[i].beingViewed){
             if (pivots[i]){
               pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
@@ -431,7 +445,6 @@ function touchSelectEvent() {
     let inputPose = event.frame.getPose(event.inputSource.targetRaySpace, xrRefSpace);
 
     if (inputPose) {
-      console.log(inputPose);
 
       let targetRay = new XRRay(inputPose.transform);
       let rayOrigin = new THREE.Vector3(targetRay.origin.x, targetRay.origin.y, targetRay.origin.z);
