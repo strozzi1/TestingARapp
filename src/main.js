@@ -381,9 +381,11 @@ function checkSupportedState() {
         }
 
         // //Planet Orbit (rad/day)
-        for (var i=0; i<jsonObj.numPlanets; i++){ //will use jsonObj.numElements
-          if (pivots[i]){
-            pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
+        for (var i=0; i<jsonObj.numPlanets; i++){ 
+          if (!planets[i].beingViewed){
+            if (pivots[i]){
+              pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
+            }
           }
         }
 
