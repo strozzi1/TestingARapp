@@ -121,7 +121,7 @@ function setCameraPoint(){
   let boxGeometry = new THREE.BoxGeometry( 0.01, 0.01, 0.01 );
   let boxmaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
   let cameraPoint = new THREE.Mesh( boxGeometry, boxmaterial );
-  camera.add( cube );
+  camera.add( cameraPoint );
   cameraPoint.position.z -= 0.5;
 
 }
