@@ -77,6 +77,13 @@ let camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeig
 camera.matrixAutoUpdate = false;
 scene.add(camera);
 
+//Test
+let boxGeometry = new THREE.BoxGeometry( 0.01, 0.01, 0.01 );
+let boxmaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+cameraPoint = new THREE.Mesh( boxGeometry, boxmaterial );
+camera.add( cameraPoint );
+cameraPoint.position.z -= 0.5;
+
 /**********
 Create Lights
 **********/
@@ -107,23 +114,11 @@ function init() {
   originPoint = new THREE.Object3D();
   originPoint.name = "origin";
 
-  setCameraPoint();
   loadModels();
 
   if (navigator.xr) {
     checkSupportedState();
   }
-}
-
-function setCameraPoint(){
-
-  //Test
-  let boxGeometry = new THREE.BoxGeometry( 0.01, 0.01, 0.01 );
-  let boxmaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-  let cameraPoint = new THREE.Mesh( boxGeometry, boxmaterial );
-  camera.add( cameraPoint );
-  cameraPoint.position.z -= 0.5;
-
 }
 
 /**********
