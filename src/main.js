@@ -109,7 +109,7 @@ function init() {
   gray.opacity = 0.3;
   let gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
   gray2.opacity = 0.5;
-  sunPreview = new THREE.Mesh( geometry, green);
+  sunPreview = new THREE.Mesh( geometry, yellow);
 
   originPoint = new THREE.Object3D();
   originPoint.name = "origin";
@@ -585,7 +585,10 @@ function planetSelect(num){
     //TODO Create a copy of the matrixWorld of the cameraPoint. This way when we are actually moving the planet we move it to one spot and not a moving spot
     //TODO move to the render function
     let dir = new THREE.Vector3();
-    dir.subVectors(planets[num].getWorldPosition(dir), cameraPoint.position).normalize();
+    let dir2 = new THREE.Vector3();
+    // dir.subVectors(planets[num].getWorldPosition(dir), cameraPoint.position).normalize();
+    dir.subVectors(cameraPoint.getWorldPosition(dir), planets[num].getWorldPosition(dir2)).normalize();
+
 
     let dist = new THREE.Vector3();
     let distance;
