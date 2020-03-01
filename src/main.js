@@ -582,7 +582,7 @@ function planetSelect(num){
     }
     jsonObj.planets[num].beingViewed = true;
 
-
+    //TODO Create a copy of the matrixWorld of the cameraPoint. This way when we are actually moving the planet we move it to one spot and not a moving spot
     //TODO move to the render function
     let dir = new THREE.Vector3();
     dir.subVectors(planets[num].getWorldPosition(dir), cameraPoint.position).normalize();
@@ -590,13 +590,11 @@ function planetSelect(num){
     let dist = new THREE.Vector3();
     let distance;
 
-    planets[num].getWorldPosition(dist);
-    distance = cameraPoint.position.distanceTo(dist);
-    console.log(distance);
-
     cameraPoint.getWorldPosition(dist);
     distance = planets[num].position.distanceTo(dist);
-    console.log(distance);
+
+    originPoint.translateOnAxis(dir, distance);
+    
   }
 }
 
