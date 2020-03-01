@@ -92,6 +92,7 @@ camera.add(light);
 //Inital function that starts AR off. Establishes AR to button with eventlistener
 function init() {
 
+  //TODO: would like to impliment the sunObj here, but transparent
   let geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
   let green = new THREE.MeshBasicMaterial( {color: 0x00ff00, transparent: true} ); //Green
   green.opacity = 0.5;
@@ -101,12 +102,12 @@ function init() {
   gray.opacity = 0.3;
   let gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
   gray2.opacity = 0.5;
-  sunPreview = new THREE.Mesh( geometry, green);
+  sunPreview = new THREE.Mesh( geometry, gray);
 
   originPoint = new THREE.Object3D();
   originPoint.name = "origin";
 
-  //setCameraPlanetView();
+  setCameraPoint();
   loadModels();
 
   if (navigator.xr) {
@@ -114,15 +115,14 @@ function init() {
   }
 }
 
-function setCameraPlanetView(){
+function setCameraPoint(){
 
   //Test
   let boxGeometry = new THREE.BoxGeometry( 0.01, 0.01, 0.01 );
   let boxmaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-  let cube = new THREE.Mesh( boxGeometry, boxmaterial );
+  let cameraPoint = new THREE.Mesh( boxGeometry, boxmaterial );
   camera.add( cube );
-  cube.position.z -= 0.5;
-
+  cameraPoint.position.z -= 0.5;
 
 }
 
@@ -399,8 +399,6 @@ function checkSupportedState() {
             if (pivots[i]){
               pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
             }
-          } else {
-            console.log(jsonObj.planets[i].name);
           }
         }
 
@@ -441,10 +439,8 @@ function checkSupportedState() {
 
 function touchSelectEvent() {
   if (showSolarSystem){
-    //console.log(event);
 
     let inputPose = event.frame.getPose(event.inputSource.targetRaySpace, xrRefSpace);
-
     if (inputPose) {
 
       let targetRay = new XRRay(inputPose.transform);
@@ -547,6 +543,7 @@ function touchSelectEvent() {
     //showSolarSystem = false;
 
   } else {
+    //TODO check that redical is visible
     showSolarSystem = true;
 
     let sunPreviewMatrix = sunPreview.matrixWorld;
@@ -589,7 +586,22 @@ function planetSelect(num){
       jsonObj.planets[i].beingViewed = false;
     }
     jsonObj.planets[num].beingViewed = true;
-    // console.log(jsonObj.planets[num].beingViewed);
+
+
+    //TODO move to the render function
+    let dir = new THREE.Vector3();
+    dir.subVectors(cameraPoint.getWorldPosition(dir), planets[num].position).normalize();
+    console.log(dir);
+    dir.subVectors(planets[num].getWorldPosition(dir), cameraPoint.position).normalize();
+    console.log(dir);
+
+    let dist = new THREE.Vector3();
+    planets[num].getWorldPosition(dist);
+    dist = cameraPoint.position.distanceTO(dist);
+    console.log(dist);
+    cameraPoint.getWorldPosition(dist);
+    dist = planets[num].position.distanceTO(dist);
+    console.log(dist);
   }
 }
 
