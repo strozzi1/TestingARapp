@@ -109,7 +109,7 @@ function init() {
   gray.opacity = 0.3;
   let gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
   gray2.opacity = 0.5;
-  sunPreview = new THREE.Mesh( geometry, yellow);
+  sunPreview = new THREE.Mesh( geometry, green);
 
   originPoint = new THREE.Object3D();
   originPoint.name = "origin";
@@ -590,11 +590,14 @@ function planetSelect(num){
     let dist = new THREE.Vector3();
     let distance;
 
-    cameraPoint.getWorldPosition(dist);
-    distance = planets[num].position.distanceTo(dist);
+    // cameraPoint.getWorldPosition(dist);
+    // distance = planets[num].position.distanceTo(dist);
+
+    planets[num].getWorldPosition(dist);
+    distance = cameraPoint.position.distanceTo(dist);
 
     originPoint.translateOnAxis(dir, distance);
-    
+
   }
 }
 
