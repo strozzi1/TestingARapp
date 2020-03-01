@@ -101,7 +101,7 @@ function init() {
   gray.opacity = 0.3;
   var gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
   gray2.opacity = 0.5;
-  sunPreview = new THREE.Mesh( geometry, yellow);
+  sunPreview = new THREE.Mesh( geometry, green);
 
   originPoint = new THREE.Object3D();
   originPoint.name = "origin";
@@ -121,7 +121,8 @@ function setCameraTarget(){
   let boxmaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
   let cube = new THREE.Mesh( boxGeometry, boxmaterial );
   camera.add( cube );
-  cube.position.set(0,0,-100);
+  cube.position.z -= 0.5;
+
 
 }
 
@@ -400,6 +401,8 @@ function checkSupportedState() {
             if (pivots[i]){
               pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
             }
+          } else {
+            console.log(planets[i].name);
           }
         }
 
@@ -588,6 +591,7 @@ function planetSelect(num){
       jsonObj.planets[i].beingViewed = false;
     }
     jsonObj.planets[num].beingViewed = true;
+    console.log(planets[num].beingViewed);
   }
 }
 
