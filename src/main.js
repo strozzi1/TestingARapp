@@ -109,7 +109,7 @@ function init() {
   gray.opacity = 0.3;
   let gray2 = new THREE.MeshBasicMaterial( {color: 0x808080, transparent: true} ); //gray
   gray2.opacity = 0.5;
-  sunPreview = new THREE.Mesh( geometry, yellow);
+  sunPreview = new THREE.Mesh( geometry, gray2);
 
   originPoint = new THREE.Object3D();
   originPoint.name = "origin";
@@ -309,7 +309,7 @@ function checkSupportedState() {
       let layer = new XRWebGLLayer(xrSession, gl);
       xrSession.updateRenderState({ baseLayer: layer });
 
-      //TODO 'end' eventlistener
+      xrSession.addEventListener('end', onSessionEnd);
 
       //Test
       xrSession.requestHitTestSourceForTransientInput(hitTestOptionsInit).then((hitTestSource) => {
@@ -325,6 +325,10 @@ function checkSupportedState() {
     }
   }
 
+  function onSessionEnd(){
+    console.log("SESSSION ENDED");
+    xrSession = null;
+  }
 
   function renderXR(timestamp, xrFrame){
 
@@ -586,20 +590,16 @@ function planetSelect(num){
     //TODO move to the render function
     let dir = new THREE.Vector3();
     let dir2 = new THREE.Vector3();
-    // dir.subVectors(planets[num].getWorldPosition(dir), cameraPoint.position).normalize();
     dir.subVectors(cameraPoint.getWorldPosition(dir), planets[num].getWorldPosition(dir2)).normalize();
-
 
     let dist = new THREE.Vector3();
     let distance;
-
-    // cameraPoint.getWorldPosition(dist);
-    // distance = planets[num].position.distanceTo(dist);
 
     planets[num].getWorldPosition(dist);
     distance = cameraPoint.position.distanceTo(dist);
 
     originPoint.translateOnAxis(dir, distance);
+    originPoint.position.y = 0.2;
 
   }
 }
