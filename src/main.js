@@ -327,6 +327,7 @@ function checkSupportedState() {
 
   function onSessionEnd(){
     console.log("SESSION ENDED");
+    arActivated = false;
     xrSession = null;
   }
 
@@ -373,44 +374,7 @@ function checkSupportedState() {
       });
 
     } else {
-
-        if (reticle){
-          reticle.visible = false;
-          originPoint.visible = true;
-        }
-
-        //TODO: Render Animations here
-        //Sun Rotation
-        if (sunObj){
-          sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
-        }
-
-        //Planet Rotation (rad/day)
-        for (let i=0; i<jsonObj.numPlanets; i++){
-          if (planets[i]){
-            planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
-          }
-        }
-
-        // //Planet Orbit (rad/day)
-        for (let i=0; i<jsonObj.numPlanets; i++){
-          if (!jsonObj.planets[i].beingViewed){
-            if (pivots[i]){
-              pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
-            }
-          }
-        }
-
-        //Moon Rotation (rad/day)
-        if (moonObj){
-          moonObj.rotateY(jsonObj.planets[2].moon.rotation / jsonObj.rotationScale);
-        }
-
-        //Moon Orbit (rad/day)
-        if (moonPivot){
-          moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
-        }
-
+      sceneAnimate();
     }
 
     let xrLayer = xrSession.renderState.baseLayer;
@@ -422,6 +386,45 @@ function checkSupportedState() {
     }
 
     xrSession.requestAnimationFrame(renderXR);
+  }
+
+  function sceneAnimate(){
+    if (reticle){
+      reticle.visible = false;
+      originPoint.visible = true;
+    }
+
+    //TODO: Render Animations here
+    //Sun Rotation
+    if (sunObj){
+      sunObj.rotateY(jsonObj.sun.rotation / jsonObj.rotationScale);
+    }
+
+    //Planet Rotation (rad/day)
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      if (planets[i]){
+        planets[i].rotateY(jsonObj.planets[i].rotation / jsonObj.rotationScale);
+      }
+    }
+
+    // //Planet Orbit (rad/day)
+    for (let i=0; i<jsonObj.numPlanets; i++){
+      if (!jsonObj.planets[i].beingViewed){
+        if (pivots[i]){
+          pivots[i].rotateY(jsonObj.planets[i].orbit / jsonObj.orbitScale);
+        }
+      }
+    }
+
+    //Moon Rotation (rad/day)
+    if (moonObj){
+      moonObj.rotateY(jsonObj.planets[2].moon.rotation / jsonObj.rotationScale);
+    }
+
+    //Moon Orbit (rad/day)
+    if (moonPivot){
+      moonPivot.rotateY(jsonObj.planets[2].moon.orbit / jsonObj.orbitScale);
+    }
   }
 
   function renderView(xrView, viewport){
